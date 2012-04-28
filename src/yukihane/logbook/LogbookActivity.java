@@ -43,6 +43,13 @@ public class LogbookActivity extends Activity {
         runner.request("me/feed", new MeRequestListener());
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume");
+        facebook.extendAccessTokenIfNeeded(this, null);
+    }
+
     private void initSession() {
         final String[] permissions = { "read_stream" };
         mPrefs = getPreferences(MODE_PRIVATE);
