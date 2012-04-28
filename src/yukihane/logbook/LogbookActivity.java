@@ -47,7 +47,7 @@ public class LogbookActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult");
+        Log.v(TAG, "onActivityResult");
 
         facebook.authorizeCallback(requestCode, resultCode, data);
     }
@@ -57,7 +57,7 @@ public class LogbookActivity extends Activity {
         @Override
         public void onComplete(Bundle values) {
             // TODO Auto-generated method stub
-            Log.i(TAG, "onComplete");
+            Log.v(TAG, "onComplete");
 
             final SharedPreferences.Editor editor = mPrefs.edit();
             editor.putString(ACCESS_TOKEN, facebook.getAccessToken());
@@ -68,7 +68,7 @@ public class LogbookActivity extends Activity {
         @Override
         public void onFacebookError(FacebookError e) {
             // TODO Auto-generated method stub
-            Log.i(TAG, "onFacebookError");
+            Log.v(TAG, "onFacebookError");
 
         }
 
@@ -82,7 +82,7 @@ public class LogbookActivity extends Activity {
         @Override
         public void onCancel() {
             // TODO Auto-generated method stub
-            Log.i(TAG, "onCancel");
+            Log.v(TAG, "onCancel");
 
         }
     }
