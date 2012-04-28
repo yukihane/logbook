@@ -3,23 +3,28 @@ package yukihane.logbook;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import yukihane.logbook.R.layout;
 import yukihane.logbook.entity.Feed;
 import yukihane.logbook.entity.WallElement;
-import android.R.layout;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
@@ -43,7 +48,7 @@ public class LogbookActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(layout.main);
 
         initSession();
 
@@ -139,11 +144,7 @@ public class LogbookActivity extends Activity {
                     public void run() {
                         try {
                             final Feed feed = Feed.fromJSONObject(res);
-                            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(LogbookActivity.this,
-                                    layout.simple_list_item_1);
-                            for (final WallElement drawable : feed.getWallElements()) {
-                                adapter.add(drawable.toString());
-                            }
+                            final WallElmAdapter adapter = new WallElmAdapter(feed.getWallElements());
                             final ListView list = (ListView) findViewById(id.list);
                             list.setAdapter(adapter);
                         } catch (JSONException e) {
@@ -220,5 +221,47 @@ public class LogbookActivity extends Activity {
             // TODO Auto-generated method stub
             Log.v(TAG, "LogoutListener#onFacebookError", e);
         }
+    }
+
+    private class WallElmAdapter extends BaseAdapter {
+
+        private final List<WallElement> wallElements;
+
+        private WallElmAdapter(List<WallElement> wallElements) {
+            this.wallElements = wallElements;
+        }
+
+        @Override
+        public int getCount() {
+            return wallElements.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return wallElements.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+            if (v == null) {
+                final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = inflater.inflate(layout.row, null);
+            }
+
+            final WallElement item = (WallElement) getItem(position);
+            if (item != null) {
+                final TextView textView = (TextView) v.findViewById(id.rowitem);
+                textView.setText(item.toString());
+            }
+
+            return v;
+        }
+
     }
 }
