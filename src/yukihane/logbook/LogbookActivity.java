@@ -44,6 +44,7 @@ public class LogbookActivity extends Activity {
     }
 
     private void initSession() {
+        final String[] permissions = { "read_stream" };
         mPrefs = getPreferences(MODE_PRIVATE);
         String access_token = mPrefs.getString(ACCESS_TOKEN, null);
         long expires = mPrefs.getLong(ACCESS_EXPIRES, 0);
@@ -55,7 +56,7 @@ public class LogbookActivity extends Activity {
         }
 
         if (!facebook.isSessionValid()) {
-            facebook.authorize(this, new AuthorizeDialogListener());
+            facebook.authorize(this, permissions, new AuthorizeDialogListener());
         }
     }
 
