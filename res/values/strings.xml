@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, LogbookActivity!</string>
     <string name="app_name">logbook</string>
+    <string name="logout">logout</string>
 
 </resources>
