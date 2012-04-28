@@ -111,7 +111,6 @@ public class LogbookActivity extends Activity {
             try {
                 final JSONObject res = Util.parseJson(response);
                 final String text = res.toString(1);
-                Log.i(TAG, text);
                 LogbookActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -127,8 +126,6 @@ public class LogbookActivity extends Activity {
                 // TODO Auto-generated catch block
                 Log.e(TAG, "MeRequestListener#onComplete", e);
             }
-            Log.i(TAG, "" + state);
-
         }
 
         @Override
