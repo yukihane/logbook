@@ -8,17 +8,32 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Feed {
+    private final List<WallElement> drawables;
+
+    private Feed(List<WallElement> drawables) {
+        this.drawables = drawables;
+    }
 
     public static Feed fromJSONObject(JSONObject obj) throws JSONException {
         final JSONArray data = obj.getJSONArray("data");
-        return new Feed();
+        final int length = data.length();
+        final List<WallElement> dr = new ArrayList<WallElement>(length);
+        for (int i = 0; i < length; i++) {
+            final JSONObject m = data.getJSONObject(i);
+            final String id = m.optString("id");
+            final String type = m.optString("type");
+            final String message = m.optString("message");
+            dr.add(new WallElement(id, type, message));
+        }
+
+        // TODO
+        final JSONObject paging = obj.getJSONObject("paging");
+
+        return new Feed(dr);
     }
 
-    public List<Drawable> getDrawables() {
-        List<Drawable> list = new ArrayList<Drawable>(2);
-        list.add(new Drawable());
-        list.add(new Drawable());
-        return list;
+    public List<WallElement> getWallElements() {
+        return drawables;
     }
 
 }

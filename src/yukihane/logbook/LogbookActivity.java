@@ -7,6 +7,9 @@ import java.net.MalformedURLException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import yukihane.logbook.entity.Feed;
+import yukihane.logbook.entity.WallElement;
+import android.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,8 +17,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
@@ -130,15 +134,23 @@ public class LogbookActivity extends Activity {
             Log.v(TAG, "MeRequestListener#onComplete");
             try {
                 final JSONObject res = Util.parseJson(response);
-                final String text = res.toString(1);
                 LogbookActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        final TextView view = (TextView) findViewById(id.myview);
-                        view.setText(text);
+                        try {
+                            final Feed feed = Feed.fromJSONObject(res);
+                            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(LogbookActivity.this,
+                                    layout.simple_list_item_1);
+                            for (final WallElement drawable : feed.getWallElements()) {
+                                adapter.add(drawable.toString());
+                            }
+                            final ListView list = (ListView) findViewById(id.list);
+                            list.setAdapter(adapter);
+                        } catch (JSONException e) {
+                            Log.e(TAG, "", e);
+                        }
                     }
                 });
-//                final List<? extends Drawable> drawables = Feed.fromJSONObject(res);
             } catch (FacebookError e) {
                 // TODO Auto-generated catch block
                 Log.e(TAG, "MeRequestListener#onComplete", e);

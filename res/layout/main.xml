@@ -10,16 +10,8 @@
         android:layout_height="wrap_content"
         android:text="@string/logout" />
 
-    <ScrollView
-        android:id="@+id/myscroll"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <TextView
-            android:id="@+id/myview"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/hello" />
-    </ScrollView>
-
-</LinearLayout>
+        android:layout_height="fill_parent" />
+</LinearLayout>
