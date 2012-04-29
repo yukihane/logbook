@@ -61,7 +61,14 @@ public class LogbookActivity extends Activity {
             }
         });
 
-        runner.request("me/feed", new MeRequestListener());
+        final Button btnReload = (Button) findViewById(id.reloadbutton);
+        btnReload.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                runner.request("me/feed", new MeRequestListener());
+            }
+        });
     }
 
     @Override
