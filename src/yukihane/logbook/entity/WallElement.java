@@ -41,6 +41,14 @@ public class WallElement {
         return message;
     }
 
+    public String getHeader() {
+        return "" + userName + "  " + updatedTime + "(" + commentsCount + ")" + " " + type;
+    }
+
+    public String getBody() {
+        return "" + message;
+    }
+
     @Override
     public String toString() {
         return "(" + commentsCount + ")" + "id:" + id + ", type:" + type + ", \nmessage:" + message + ", \nuser name: "

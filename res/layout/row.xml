@@ -5,9 +5,17 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/rowheader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#3b5998"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
+    <TextView
         android:id="@+id/rowitem"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="8sp" />
+        android:textSize="12sp" />
 
 </LinearLayout>

@@ -266,8 +266,10 @@ public class LogbookActivity extends Activity {
 
             final WallElement item = (WallElement) getItem(position);
             if (item != null) {
+                final TextView header = (TextView) v.findViewById(id.rowheader);
+                header.setText(item.getHeader());
                 final TextView textView = (TextView) v.findViewById(id.rowitem);
-                textView.setText(item.toString());
+                textView.setText(item.getBody());
             }
 
             return v;
