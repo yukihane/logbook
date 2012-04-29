@@ -3,6 +3,7 @@ package yukihane.logbook;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.json.JSONException;
@@ -155,6 +156,8 @@ public class LogbookActivity extends Activity {
                             final ListView list = (ListView) findViewById(id.list);
                             list.setAdapter(adapter);
                         } catch (JSONException e) {
+                            Log.e(TAG, "", e);
+                        } catch (ParseException e) {
                             Log.e(TAG, "", e);
                         }
                     }
