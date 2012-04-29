@@ -112,7 +112,7 @@ public class LogbookActivity extends Activity {
         @Override
         public void onFacebookError(FacebookError e) {
             // TODO Auto-generated method stub
-            Log.v(TAG, "onFacebookError");
+            Log.e(TAG, "onFacebookError", e);
 
         }
 
