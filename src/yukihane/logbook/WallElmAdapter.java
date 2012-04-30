@@ -1,5 +1,6 @@
 package yukihane.logbook;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import yukihane.logbook.R.layout;
@@ -14,16 +15,12 @@ import android.widget.TextView;
 import com.facebook.android.R.id;
 
 public class WallElmAdapter extends BaseAdapter {
-
-    /**
-     * 
-     */
     private final Context context;
     private final List<WallElement> wallElements;
 
-    WallElmAdapter(Context context, List<WallElement> wallElements) {
+    public WallElmAdapter(Context context, List<WallElement> wallElements) {
         this.context = context;
-        this.wallElements = wallElements;
+        this.wallElements = new ArrayList<WallElement>(wallElements);
     }
 
     @Override
