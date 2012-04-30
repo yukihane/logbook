@@ -19,7 +19,7 @@ public class Page {
     private final List<Item> items;
     private Bundle nextParam;
 
-    private Page(List<Item> items, Bundle nextParam) {
+    protected Page(List<Item> items, Bundle nextParam) {
         this.items = items;
         this.nextParam = nextParam;
     }

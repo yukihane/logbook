@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
 import yukihane.logbook.R.layout;
+import yukihane.logbook.entity.Item;
 import yukihane.logbook.entity.Page;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -74,6 +77,17 @@ public class LogbookActivity extends Activity {
         footer.setText("here is footer");
         list.addFooterView(footer);
         list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final ListView lv = (ListView) parent;
+                final Item we = (Item) lv.getItemAtPosition(position);
+                final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
+                intent.putExtra("id", we.getId());
+                startActivityForResult(intent, 0);
+            }
+        });
     }
 
     @Override
@@ -103,9 +117,9 @@ public class LogbookActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.v(TAG, "onActivityResult");
+        Log.v(TAG, "onActivityResult: " + resultCode + ", " + resultCode);
 
-        facebook.authorizeCallback(requestCode, resultCode, data);
+        //        facebook.authorizeCallback(requestCode, resultCode, data);
     }
 
     private class AuthorizeDialogListener implements DialogListener {

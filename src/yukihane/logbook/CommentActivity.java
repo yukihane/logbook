@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
 import yukihane.logbook.R.layout;
+import yukihane.logbook.entity.CommentsPage;
 import yukihane.logbook.entity.Page;
 import android.app.Activity;
 import android.content.Intent;
@@ -41,12 +42,15 @@ public class CommentActivity extends Activity {
     private SharedPreferences mPrefs;
     private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
+    private String threadID;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout.main);
+
+        threadID = getIntent().getStringExtra("id");
 
         initSession();
 
@@ -65,7 +69,7 @@ public class CommentActivity extends Activity {
             @Override
             public void onClick(View v) {
                 adapter.clear();
-                runner.request("me/feed", pageLiquestListener);
+                runner.request(threadID, pageLiquestListener);
             }
         });
 
@@ -103,9 +107,9 @@ public class CommentActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.v(TAG, "onActivityResult");
-
-        facebook.authorizeCallback(requestCode, resultCode, data);
+//        Log.v(TAG, "onActivityResult");
+//
+//        facebook.authorizeCallback(requestCode, resultCode, data);
     }
 
     private class AuthorizeDialogListener implements DialogListener {
@@ -156,7 +160,7 @@ public class CommentActivity extends Activity {
                     @Override
                     public void run() {
                         try {
-                            final Page feed = Page.fromJSONObject(res);
+                            final Page feed = CommentsPage.fromJSONObject(res);
                             adapter.addPage(feed);
                         } catch (JSONException e) {
                             Log.e(TAG, "", e);
@@ -241,7 +245,7 @@ public class CommentActivity extends Activity {
         @Override
         public void fire(Bundle nextParam) {
             if (nextParam != null) {
-                runner.request("me/feed", nextParam, pageLiquestListener);
+                runner.request(threadID, nextParam, pageLiquestListener);
             }
         }
     }
