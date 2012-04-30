@@ -5,7 +5,12 @@ import java.util.List;
 
 import org.w3c.dom.Comment;
 
-public class WallElement {
+/**
+ * ページに表示するひとつひとつの項目.
+ * @author yuki
+ *
+ */
+public class Item {
 
     private final String id;
     private final String type;
@@ -17,7 +22,7 @@ public class WallElement {
     private List<Comment> comments;
     private int commentsCount;
 
-    public WallElement(String id, String type, String message, String userID, String userName, Date createdTime,
+    public Item(String id, String type, String message, String userID, String userName, Date createdTime,
             Date updatedTime, int commentsCount) {
         this.id = id;
         this.type = type;

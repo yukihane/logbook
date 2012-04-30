@@ -146,7 +146,7 @@ public class LogbookActivity extends Activity {
                         try {
                             final Feed feed = Feed.fromJSONObject(res);
                             final WallElmAdapter adapter = new WallElmAdapter(LogbookActivity.this, feed
-                                    .getWallElements());
+                                    .getItems());
                             final ListView list = (ListView) findViewById(id.list);
                             list.setAdapter(adapter);
                         } catch (JSONException e) {

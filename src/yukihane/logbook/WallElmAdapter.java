@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yukihane.logbook.R.layout;
-import yukihane.logbook.entity.WallElement;
+import yukihane.logbook.entity.Item;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +16,21 @@ import com.facebook.android.R.id;
 
 public class WallElmAdapter extends BaseAdapter {
     private final Context context;
-    private final List<WallElement> wallElements;
+    private final List<Item> items;
 
-    public WallElmAdapter(Context context, List<WallElement> wallElements) {
+    public WallElmAdapter(Context context, List<Item> items) {
         this.context = context;
-        this.wallElements = new ArrayList<WallElement>(wallElements);
+        this.items = new ArrayList<Item>(items);
     }
 
     @Override
     public int getCount() {
-        return wallElements.size();
+        return items.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return wallElements.get(position);
+        return items.get(position);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class WallElmAdapter extends BaseAdapter {
             v = inflater.inflate(layout.row, null);
         }
 
-        final WallElement item = (WallElement) getItem(position);
+        final Item item = (Item) getItem(position);
         if (item != null) {
             final TextView header = (TextView) v.findViewById(id.rowheader);
             header.setText(item.getHeader());

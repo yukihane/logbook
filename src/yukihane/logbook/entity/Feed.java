@@ -11,16 +11,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Feed {
-    private final List<WallElement> drawables;
+    private final List<Item> items;
 
-    private Feed(List<WallElement> drawables) {
-        this.drawables = drawables;
+    private Feed(List<Item> items) {
+        this.items = items;
     }
 
     public static Feed fromJSONObject(JSONObject obj) throws JSONException, ParseException {
         final JSONArray data = obj.getJSONArray("data");
         final int length = data.length();
-        final List<WallElement> dr = new ArrayList<WallElement>(length);
+        final List<Item> it = new ArrayList<Item>(length);
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         for (int i = 0; i < length; i++) {
             final JSONObject m = data.getJSONObject(i);
@@ -39,17 +39,17 @@ public class Feed {
             final JSONObject commentsObj = m.getJSONObject("comments");
             int commentCount = commentsObj.getInt("count");
 
-            dr.add(new WallElement(id, type, message, userID, userName, createdTime, updatedTime, commentCount));
+            it.add(new Item(id, type, message, userID, userName, createdTime, updatedTime, commentCount));
         }
 
         // TODO
         final JSONObject paging = obj.getJSONObject("paging");
 
-        return new Feed(dr);
+        return new Feed(it);
     }
 
-    public List<WallElement> getWallElements() {
-        return drawables;
+    public List<Item> getItems() {
+        return items;
     }
 
 }
