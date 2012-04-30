@@ -44,7 +44,7 @@ public class ItemAdapter extends BaseAdapter {
         if (v == null) {
             final LayoutInflater inflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(layout.row, null);
+            v = inflater.inflate(layout.item_display, null);
         }
 
         final Item item = (Item) getItem(position);
