@@ -7,7 +7,7 @@ import java.util.List;
 
 import yukihane.logbook.R.id;
 import yukihane.logbook.R.layout;
-import yukihane.logbook.entity.Feed;
+import yukihane.logbook.entity.Page;
 import yukihane.logbook.entity.Item;
 import android.content.Context;
 import android.util.Log;
@@ -29,7 +29,7 @@ public class ItemAdapter extends BaseAdapter {
         this.listner = listener;
     }
 
-    public void addPage(Feed feed2) {
+    public void addPage(Page feed2) {
         Log.i(TAG,
                 "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:" + feed2.getNextURL());
         fired = false;

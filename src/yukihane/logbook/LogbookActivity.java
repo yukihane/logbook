@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
 import yukihane.logbook.R.layout;
-import yukihane.logbook.entity.Feed;
+import yukihane.logbook.entity.Page;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -148,7 +148,7 @@ public class LogbookActivity extends Activity {
                     @Override
                     public void run() {
                         try {
-                            final Feed feed = Feed.fromJSONObject(res);
+                            final Page feed = Page.fromJSONObject(res);
                             adapter.addPage(feed);
                             final ListView list = (ListView) findViewById(id.list);
                             TextView footer = new TextView(list.getContext());

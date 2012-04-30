@@ -10,16 +10,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Feed {
+public class Page {
     private final List<Item> items;
     private String nextURL;
 
-    private Feed(List<Item> items, String nextURL) {
+    private Page(List<Item> items, String nextURL) {
         this.items = items;
         this.nextURL = nextURL;
     }
 
-    public static Feed fromJSONObject(JSONObject obj) throws JSONException, ParseException {
+    public static Page fromJSONObject(JSONObject obj) throws JSONException, ParseException {
         final JSONArray data = obj.getJSONArray("data");
         final int length = data.length();
         final List<Item> it = new ArrayList<Item>(length);
@@ -47,11 +47,11 @@ public class Feed {
         final JSONObject paging = obj.getJSONObject("paging");
         final String nextURL = paging.getString("next");
 
-        return new Feed(it, nextURL);
+        return new Page(it, nextURL);
     }
     
     public void addFromJSONObject(JSONObject obj) throws JSONException, ParseException {
-        final Feed newFeed = fromJSONObject(obj);
+        final Page newFeed = fromJSONObject(obj);
         this.items.addAll(newFeed.items);
         this.nextURL = newFeed.nextURL;
     }
