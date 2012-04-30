@@ -7,9 +7,10 @@ import java.util.List;
 
 import yukihane.logbook.R.id;
 import yukihane.logbook.R.layout;
-import yukihane.logbook.entity.Page;
 import yukihane.logbook.entity.Item;
+import yukihane.logbook.entity.Page;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ public class ItemAdapter extends BaseAdapter {
     private final Context context;
     private final ReachLastItemListener listner;
     private final List<Item> items = new ArrayList<Item>();
-    private String nextURL;
+    private Bundle nextParam;
     private boolean fired = false;
 
     public ItemAdapter(Context context, ReachLastItemListener listener) {
@@ -31,10 +32,18 @@ public class ItemAdapter extends BaseAdapter {
 
     public void addPage(Page feed2) {
         Log.i(TAG,
-                "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:" + feed2.getNextURL());
+                "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:"
+                        + feed2.getNextParam());
         fired = false;
-        nextURL = feed2.getNextURL();
+        nextParam = feed2.getNextParam();
         items.addAll(feed2.getItems());
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        fired = false;
+        nextParam = new Bundle();
+        items.clear();
         notifyDataSetChanged();
     }
 
@@ -72,7 +81,7 @@ public class ItemAdapter extends BaseAdapter {
 
         if (!fired && position >= getCount() - 1) {
             Log.v(TAG, "fire next page request");
-            listner.fire(nextURL);
+            listner.fire(nextParam);
             fired = true;
         }
 
@@ -81,6 +90,6 @@ public class ItemAdapter extends BaseAdapter {
 
     public interface ReachLastItemListener {
 
-        void fire(String nextURL);
+        void fire(Bundle nextParam);
     }
 }

@@ -40,6 +40,7 @@ public class LogbookActivity extends Activity {
     private final AsyncFacebookRunner runner = new AsyncFacebookRunner(facebook);
     private SharedPreferences mPrefs;
     private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
+    private final MeRequestListener pageLiquestListener = new MeRequestListener();
 
     /** Called when the activity is first created. */
     @Override
@@ -63,9 +64,16 @@ public class LogbookActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                runner.request("me/home", new MeRequestListener());
+                adapter.clear();
+                runner.request("me/feed", pageLiquestListener);
             }
         });
+
+        final ListView list = (ListView) findViewById(id.list);
+        final TextView footer = new TextView(list.getContext());
+        footer.setText("here is footer");
+        list.addFooterView(footer);
+        list.setAdapter(adapter);
     }
 
     @Override
@@ -150,11 +158,6 @@ public class LogbookActivity extends Activity {
                         try {
                             final Page feed = Page.fromJSONObject(res);
                             adapter.addPage(feed);
-                            final ListView list = (ListView) findViewById(id.list);
-                            TextView footer = new TextView(list.getContext());
-                            footer.setText("here is footer");
-                            list.addFooterView(footer);
-                            list.setAdapter(adapter);
                         } catch (JSONException e) {
                             Log.e(TAG, "", e);
                         } catch (ParseException e) {
@@ -236,9 +239,10 @@ public class LogbookActivity extends Activity {
     private class RequestNextPage implements ReachLastItemListener {
 
         @Override
-        public void fire(String nextURL) {
-            // TODO Auto-generated method stub
-
+        public void fire(Bundle nextParam) {
+            if (nextParam != null) {
+                runner.request("me/feed", nextParam, pageLiquestListener);
+            }
         }
     }
 }

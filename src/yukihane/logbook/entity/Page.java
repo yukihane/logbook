@@ -1,5 +1,7 @@
 package yukihane.logbook.entity;
 
+import static yukihane.logbook.LogbookActivity.TAG;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,13 +12,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Bundle;
+import android.util.Log;
+
 public class Page {
     private final List<Item> items;
-    private String nextURL;
+    private Bundle nextParam;
 
-    private Page(List<Item> items, String nextURL) {
+    private Page(List<Item> items, Bundle nextParam) {
         this.items = items;
-        this.nextURL = nextURL;
+        this.nextParam = nextParam;
     }
 
     public static Page fromJSONObject(JSONObject obj) throws JSONException, ParseException {
@@ -44,17 +49,33 @@ public class Page {
             it.add(new Item(id, type, message, userID, userName, createdTime, updatedTime, commentCount));
         }
 
-        final JSONObject paging = obj.getJSONObject("paging");
-        final String nextURL = paging.getString("next");
+        final JSONObject paging = obj.optJSONObject("paging");
+        if (paging != null) {
+            final String nextURL = paging.getString("next");
+            Bundle bundle = getParameter(nextURL);
+            Log.v(TAG, "NEXT URL:" + nextURL);
+            return new Page(it, bundle);
+        } else {
+            Log.v(TAG, "NO NEXT PAGE");
+            return new Page(it, null);
+        }
+    }
 
-        return new Page(it, nextURL);
+    public static Bundle getParameter(String url) {
+        final String[] text = url.replaceAll("^.*?\\?", "").split("&");
+        final Bundle b = new Bundle();
+        for (String p : text) {
+            final String[] kv = p.split("=");
+            b.putString(kv[0], kv[1]);
+        }
+        return b;
     }
 
     public List<Item> getItems() {
         return items;
     }
 
-    public String getNextURL() {
-        return nextURL;
+    public Bundle getNextParam() {
+        return nextParam;
     }
 }
