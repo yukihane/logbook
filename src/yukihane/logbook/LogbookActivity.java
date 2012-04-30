@@ -8,6 +8,7 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import yukihane.logbook.ItemAdapter.ReachLastItemListener;
 import yukihane.logbook.R.layout;
 import yukihane.logbook.entity.Feed;
 import android.app.Activity;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
@@ -37,6 +39,7 @@ public class LogbookActivity extends Activity {
     private final Facebook facebook = new Facebook(FBAPP_ID);
     private final AsyncFacebookRunner runner = new AsyncFacebookRunner(facebook);
     private SharedPreferences mPrefs;
+    private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
 
     /** Called when the activity is first created. */
     @Override
@@ -60,7 +63,7 @@ public class LogbookActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                runner.request("me/feed", new MeRequestListener());
+                runner.request("me/home", new MeRequestListener());
             }
         });
     }
@@ -141,13 +144,16 @@ public class LogbookActivity extends Activity {
             try {
                 final JSONObject res = Util.parseJson(response);
                 LogbookActivity.this.runOnUiThread(new Runnable() {
+
                     @Override
                     public void run() {
                         try {
                             final Feed feed = Feed.fromJSONObject(res);
-                            final ItemAdapter adapter = new ItemAdapter(LogbookActivity.this, feed
-                                    .getItems());
+                            adapter.addPage(feed);
                             final ListView list = (ListView) findViewById(id.list);
+                            TextView footer = new TextView(list.getContext());
+                            footer.setText("here is footer");
+                            list.addFooterView(footer);
                             list.setAdapter(adapter);
                         } catch (JSONException e) {
                             Log.e(TAG, "", e);
@@ -224,6 +230,15 @@ public class LogbookActivity extends Activity {
         public void onFacebookError(FacebookError e, Object state) {
             // TODO Auto-generated method stub
             Log.v(TAG, "LogoutListener#onFacebookError", e);
+        }
+    }
+
+    private class RequestNextPage implements ReachLastItemListener {
+
+        @Override
+        public void fire(String nextURL) {
+            // TODO Auto-generated method stub
+
         }
     }
 }

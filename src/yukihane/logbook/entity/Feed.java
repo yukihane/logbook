@@ -12,9 +12,11 @@ import org.json.JSONObject;
 
 public class Feed {
     private final List<Item> items;
+    private String nextURL;
 
-    private Feed(List<Item> items) {
+    private Feed(List<Item> items, String nextURL) {
         this.items = items;
+        this.nextURL = nextURL;
     }
 
     public static Feed fromJSONObject(JSONObject obj) throws JSONException, ParseException {
@@ -42,14 +44,23 @@ public class Feed {
             it.add(new Item(id, type, message, userID, userName, createdTime, updatedTime, commentCount));
         }
 
-        // TODO
         final JSONObject paging = obj.getJSONObject("paging");
+        final String nextURL = paging.getString("next");
 
-        return new Feed(it);
+        return new Feed(it, nextURL);
+    }
+    
+    public void addFromJSONObject(JSONObject obj) throws JSONException, ParseException {
+        final Feed newFeed = fromJSONObject(obj);
+        this.items.addAll(newFeed.items);
+        this.nextURL = newFeed.nextURL;
     }
 
     public List<Item> getItems() {
         return items;
     }
 
+    public String getNextURL() {
+        return nextURL;
+    }
 }
