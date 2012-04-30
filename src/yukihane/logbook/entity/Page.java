@@ -49,12 +49,6 @@ public class Page {
 
         return new Page(it, nextURL);
     }
-    
-    public void addFromJSONObject(JSONObject obj) throws JSONException, ParseException {
-        final Page newFeed = fromJSONObject(obj);
-        this.items.addAll(newFeed.items);
-        this.nextURL = newFeed.nextURL;
-    }
 
     public List<Item> getItems() {
         return items;
