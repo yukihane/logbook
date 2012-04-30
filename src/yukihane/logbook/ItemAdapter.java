@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.facebook.android.R.id;
 
-public class WallElmAdapter extends BaseAdapter {
+public class ItemAdapter extends BaseAdapter {
     private final Context context;
     private final List<Item> items;
 
-    public WallElmAdapter(Context context, List<Item> items) {
+    public ItemAdapter(Context context, List<Item> items) {
         this.context = context;
         this.items = new ArrayList<Item>(items);
     }

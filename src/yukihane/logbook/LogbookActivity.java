@@ -145,7 +145,7 @@ public class LogbookActivity extends Activity {
                     public void run() {
                         try {
                             final Feed feed = Feed.fromJSONObject(res);
-                            final WallElmAdapter adapter = new WallElmAdapter(LogbookActivity.this, feed
+                            final ItemAdapter adapter = new ItemAdapter(LogbookActivity.this, feed
                                     .getItems());
                             final ListView list = (ListView) findViewById(id.list);
                             list.setAdapter(adapter);
