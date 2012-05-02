@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
-import yukihane.logbook.R.layout;
+import yukihane.logbook.R;
 import yukihane.logbook.entity.Item;
 import yukihane.logbook.entity.Page;
 import android.app.Activity;
@@ -31,7 +31,7 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
-import com.facebook.android.R.id;
+import com.facebook.android.LoginButton;
 import com.facebook.android.Util;
 
 public class LogbookActivity extends Activity {
@@ -44,16 +44,26 @@ public class LogbookActivity extends Activity {
     private SharedPreferences mPrefs;
     private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
+    private LoginButton mLoginButton;
+    private static final int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layout.main);
+        setContentView(R.layout.main);
+
+        mLoginButton = (LoginButton) findViewById(R.id.login);
+
+        /*
+         * Source Tag: login_tag
+         */
+        final String[] permissions ={"read_stream"};
+        mLoginButton.init(this, AUTHORIZE_ACTIVITY_RESULT_CODE, facebook, permissions);
 
         initSession();
 
-        final Button btn = (Button) findViewById(id.logoutbutton);
+        final Button btn = (Button) findViewById(R.id.logoutbutton);
         btn.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -62,7 +72,7 @@ public class LogbookActivity extends Activity {
             }
         });
 
-        final Button btnReload = (Button) findViewById(id.reloadbutton);
+        final Button btnReload = (Button) findViewById(R.id.reloadbutton);
         btnReload.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -72,7 +82,7 @@ public class LogbookActivity extends Activity {
             }
         });
 
-        final ListView list = (ListView) findViewById(id.list);
+        final ListView list = (ListView) findViewById(R.id.list);
         final TextView footer = new TextView(list.getContext());
         footer.setText("here is footer");
         list.addFooterView(footer);
