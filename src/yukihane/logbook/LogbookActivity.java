@@ -9,12 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
-import yukihane.logbook.R;
 import yukihane.logbook.entity.Item;
 import yukihane.logbook.entity.Page;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,9 +25,7 @@ import android.widget.TextView;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.facebook.android.LoginButton;
 import com.facebook.android.Util;
@@ -37,15 +33,11 @@ import com.facebook.android.Util;
 public class LogbookActivity extends Activity {
     public static final String TAG = "LOGBOOK";
     private static final String FBAPP_ID = "368486299855660";
-    private static final String ACCESS_TOKEN = "access_token";
-    private static final String ACCESS_EXPIRES = "access_expires";
-    private final Facebook facebook = new Facebook(FBAPP_ID);
-    private final AsyncFacebookRunner runner = new AsyncFacebookRunner(facebook);
-    private SharedPreferences mPrefs;
     private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
     private LoginButton mLoginButton;
     private static final int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
+    private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
 
     /** Called when the activity is first created. */
     @Override
@@ -53,15 +45,13 @@ public class LogbookActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        LogbookApplication.mFacebook = new Facebook(FBAPP_ID);
+        LogbookApplication.mAsyncRunner = new AsyncFacebookRunner(LogbookApplication.mFacebook);
+
         mLoginButton = (LoginButton) findViewById(R.id.login);
 
-        /*
-         * Source Tag: login_tag
-         */
         final String[] permissions = { "read_stream" };
-        mLoginButton.init(this, AUTHORIZE_ACTIVITY_RESULT_CODE, facebook, permissions);
-
-        initSession();
+        mLoginButton.init(this, AUTHORIZE_ACTIVITY_RESULT_CODE, LogbookApplication.mFacebook, permissions);
 
         final Button btnReload = (Button) findViewById(R.id.reloadbutton);
         btnReload.setOnClickListener(new OnClickListener() {
@@ -69,7 +59,7 @@ public class LogbookActivity extends Activity {
             @Override
             public void onClick(View v) {
                 adapter.clear();
-                runner.request("me/feed", pageLiquestListener);
+                LogbookApplication.mAsyncRunner.request("me/feed", pageLiquestListener);
             }
         });
 
@@ -86,7 +76,7 @@ public class LogbookActivity extends Activity {
                 final Item we = (Item) lv.getItemAtPosition(position);
                 final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
                 intent.putExtra("id", we.getId());
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
             }
         });
     }
@@ -95,24 +85,7 @@ public class LogbookActivity extends Activity {
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume");
-        facebook.extendAccessTokenIfNeeded(this, null);
-    }
-
-    private void initSession() {
-        final String[] permissions = { "read_stream" };
-        mPrefs = getPreferences(MODE_PRIVATE);
-        String access_token = mPrefs.getString(ACCESS_TOKEN, null);
-        long expires = mPrefs.getLong(ACCESS_EXPIRES, 0);
-        if (access_token != null) {
-            facebook.setAccessToken(access_token);
-        }
-        if (expires != 0) {
-            facebook.setAccessExpires(expires);
-        }
-
-        if (!facebook.isSessionValid()) {
-            facebook.authorize(this, permissions, new AuthorizeDialogListener());
-        }
+        LogbookApplication.mFacebook.extendAccessTokenIfNeeded(this, null);
     }
 
     @Override
@@ -120,42 +93,7 @@ public class LogbookActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult: " + resultCode + ", " + resultCode);
 
-        //        facebook.authorizeCallback(requestCode, resultCode, data);
-    }
-
-    private class AuthorizeDialogListener implements DialogListener {
-
-        @Override
-        public void onComplete(Bundle values) {
-            // TODO Auto-generated method stub
-            Log.v(TAG, "onComplete");
-
-            final SharedPreferences.Editor editor = mPrefs.edit();
-            editor.putString(ACCESS_TOKEN, facebook.getAccessToken());
-            editor.putLong(ACCESS_EXPIRES, facebook.getAccessExpires());
-            editor.commit();
-        }
-
-        @Override
-        public void onFacebookError(FacebookError e) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "onFacebookError", e);
-
-        }
-
-        @Override
-        public void onError(DialogError e) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "onError", e);
-
-        }
-
-        @Override
-        public void onCancel() {
-            // TODO Auto-generated method stub
-            Log.v(TAG, "onCancel");
-
-        }
+        LogbookApplication.mFacebook.authorizeCallback(requestCode, resultCode, data);
     }
 
     private class MeRequestListener implements RequestListener {
@@ -219,7 +157,7 @@ public class LogbookActivity extends Activity {
         @Override
         public void fire(Bundle nextParam) {
             if (nextParam != null) {
-                runner.request("me/feed", nextParam, pageLiquestListener);
+                LogbookApplication.mAsyncRunner.request("me/feed", nextParam, pageLiquestListener);
             }
         }
     }
