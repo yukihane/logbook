@@ -58,19 +58,10 @@ public class LogbookActivity extends Activity {
         /*
          * Source Tag: login_tag
          */
-        final String[] permissions ={"read_stream"};
+        final String[] permissions = { "read_stream" };
         mLoginButton.init(this, AUTHORIZE_ACTIVITY_RESULT_CODE, facebook, permissions);
 
         initSession();
-
-        final Button btn = (Button) findViewById(R.id.logoutbutton);
-        btn.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                runner.logout(btn.getContext(), new LogoutListener());
-            }
-        });
 
         final Button btnReload = (Button) findViewById(R.id.reloadbutton);
         btnReload.setOnClickListener(new OnClickListener() {
@@ -220,43 +211,6 @@ public class LogbookActivity extends Activity {
         public void onFacebookError(FacebookError e, Object state) {
             // TODO Auto-generated method stub
             Log.e(TAG, "MeRequestListener#onComplete", e);
-        }
-    }
-
-    private class LogoutListener implements RequestListener {
-
-        @Override
-        public void onComplete(String response, Object state) {
-            // TODO Auto-generated method stub
-            Log.v(TAG, "LogoutListener#onComplete");
-            final SharedPreferences.Editor editor = mPrefs.edit();
-            editor.putString(ACCESS_TOKEN, facebook.getAccessToken());
-            editor.putLong(ACCESS_EXPIRES, facebook.getAccessExpires());
-            editor.commit();
-        }
-
-        @Override
-        public void onIOException(IOException e, Object state) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "LogoutListener#onIOException", e);
-        }
-
-        @Override
-        public void onFileNotFoundException(FileNotFoundException e, Object state) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "LogoutListener#onFileNotFoundException", e);
-        }
-
-        @Override
-        public void onMalformedURLException(MalformedURLException e, Object state) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "LogoutListener#onMalformedURLException", e);
-        }
-
-        @Override
-        public void onFacebookError(FacebookError e, Object state) {
-            // TODO Auto-generated method stub
-            Log.v(TAG, "LogoutListener#onFacebookError", e);
         }
     }
 
