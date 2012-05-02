@@ -22,12 +22,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.facebook.android.LoginButton;
+import com.facebook.android.SessionEvents;
+import com.facebook.android.SessionEvents.AuthListener;
+import com.facebook.android.SessionEvents.LogoutListener;
+import com.facebook.android.SessionStore;
 import com.facebook.android.Util;
 
 public class LogbookActivity extends Activity {
@@ -49,6 +54,11 @@ public class LogbookActivity extends Activity {
         LogbookApplication.mAsyncRunner = new AsyncFacebookRunner(LogbookApplication.mFacebook);
 
         mLoginButton = (LoginButton) findViewById(R.id.login);
+
+        // restore session if one exists
+        SessionStore.restore(LogbookApplication.mFacebook, this);
+        SessionEvents.addAuthListener(new FbAPIsAuthListener());
+        SessionEvents.addLogoutListener(new FbAPIsLogoutListener());
 
         final String[] permissions = { "read_stream" };
         mLoginButton.init(this, AUTHORIZE_ACTIVITY_RESULT_CODE, LogbookApplication.mFacebook, permissions);
@@ -161,4 +171,38 @@ public class LogbookActivity extends Activity {
             }
         }
     }
+
+    private class FbAPIsAuthListener implements AuthListener {
+
+        @Override
+        public void onAuthSucceed() {
+            Log.i(TAG, "onAuthSucceed");
+            Toast.makeText(getApplicationContext(), "logged in!", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAuthFail(String error) {
+            Log.i(TAG, "onAuthFail");
+            Toast.makeText(getApplicationContext(), "login failed: " + error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /*
+     * The Callback for notifying the application when log out starts and
+     * finishes.
+     */
+    private class FbAPIsLogoutListener implements LogoutListener {
+        @Override
+        public void onLogoutBegin() {
+            Log.i(TAG, "onLogoutBegin");
+            Toast.makeText(getApplicationContext(), "logging out...", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onLogoutFinish() {
+            Log.i(TAG, "onLogoutFinish");
+            Toast.makeText(getApplicationContext(), "logged out!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
