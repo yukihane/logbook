@@ -54,8 +54,7 @@ public class LoginButton extends ImageButton {
         init(activity, activityCode, fb, new String[] {});
     }
 
-    public void init(final Activity activity, final int activityCode, final Facebook fb,
-            final String[] permissions) {
+    public void init(final Activity activity, final int activityCode, final Facebook fb, final String[] permissions) {
         mActivity = activity;
         mActivityCode = activityCode;
         mFb = fb;
