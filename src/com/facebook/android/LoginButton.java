@@ -70,19 +70,23 @@ public class LoginButton extends ImageButton {
         setOnClickListener(new ButtonOnClickListener());
     }
 
+    public void onSelected() {
+        if (mFb.isSessionValid()) {
+            SessionEvents.onLogoutBegin();
+            AsyncFacebookRunner asyncRunner = new AsyncFacebookRunner(mFb);
+            asyncRunner.logout(getContext(), new LogoutRequestListener());
+        } else {
+            mFb.authorize(mActivity, mPermissions, mActivityCode, new LoginDialogListener());
+        }
+    }
+
     private final class ButtonOnClickListener implements OnClickListener {
         /*
          * Source Tag: login_tag
          */
         @Override
         public void onClick(View arg0) {
-            if (mFb.isSessionValid()) {
-                SessionEvents.onLogoutBegin();
-                AsyncFacebookRunner asyncRunner = new AsyncFacebookRunner(mFb);
-                asyncRunner.logout(getContext(), new LogoutRequestListener());
-            } else {
-                mFb.authorize(mActivity, mPermissions, mActivityCode, new LoginDialogListener());
-            }
+            onSelected();
         }
     }
 

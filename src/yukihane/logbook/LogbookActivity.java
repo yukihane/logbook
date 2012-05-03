@@ -15,6 +15,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,6 +43,8 @@ public class LogbookActivity extends Activity {
     private LoginButton mLoginButton;
     private static final int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
+
+    private static final int MENU_GROUP_LOGIN_LOGOUT = 1;
 
     /** Called when the activity is first created. */
     @Override
@@ -202,4 +206,27 @@ public class LogbookActivity extends Activity {
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.i(TAG, "onPrepareOptionsMenu " + getClass().getSimpleName());
+        menu.clear();
+
+        if (LogbookApplication.mFacebook.isSessionValid()) {
+            menu.add(MENU_GROUP_LOGIN_LOGOUT, 1, 1, "logout");
+        } else {
+            menu.add(MENU_GROUP_LOGIN_LOGOUT, 2, 1, "login");
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(TAG, "onOptionsItemSelected " + getClass().getSimpleName());
+        if (item.getGroupId() == MENU_GROUP_LOGIN_LOGOUT) {
+            mLoginButton.onSelected();
+            return true;
+        }
+        return false;
+    }
 }
