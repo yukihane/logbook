@@ -2,9 +2,6 @@ package yukihane.logbook;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.ParseException;
 
 import org.json.JSONException;
@@ -26,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.BaseRequestListener;
 import com.facebook.android.FacebookError;
 import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
@@ -92,7 +88,7 @@ public class LogbookActivity extends Activity {
         LogbookApplication.mFacebook.authorizeCallback(requestCode, resultCode, data);
     }
 
-    private class MeRequestListener extends BaseRequestListener {
+    private class MeRequestListener extends RequestListenerAdapter {
 
         @Override
         public void onComplete(String response, Object state) {

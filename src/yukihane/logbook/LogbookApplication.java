@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.BaseRequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
@@ -99,7 +98,7 @@ public class LogbookApplication extends Application {
         }
     }
 
-    private static class LogoutRequestListener extends BaseRequestListener {
+    private static class LogoutRequestListener extends RequestListenerAdapter {
         @Override
         public void onComplete(String response, final Object state) {
             /*
