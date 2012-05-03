@@ -52,7 +52,9 @@ public class LogbookActivity extends FacebookListActivity {
     @Override
     protected void onLoginValidated() {
         adapter.clear();
-        requestPage();
+        final Bundle b = new Bundle();
+        b.putString("limit", "100");
+        requestPage(b);
     }
 
     @Override

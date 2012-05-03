@@ -126,7 +126,6 @@ public abstract class FacebookListActivity extends Activity {
 
     protected final void requestPage() {
         Bundle b = new Bundle();
-        b.putString("limit", "100");
         requestPage(b);
     }
 
