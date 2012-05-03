@@ -1,5 +1,7 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.LogbookApplication.TAG;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -24,19 +26,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
 import com.facebook.android.SessionEvents.LogoutListener;
-import com.facebook.android.SessionStore;
 import com.facebook.android.Util;
 
 public class LogbookActivity extends Activity {
-    public static final String TAG = "LOGBOOK";
-    private static final String FBAPP_ID = "368486299855660";
     private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
     private static final int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
@@ -50,11 +47,6 @@ public class LogbookActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        LogbookApplication.mFacebook = new Facebook(FBAPP_ID);
-        LogbookApplication.mAsyncRunner = new AsyncFacebookRunner(LogbookApplication.mFacebook);
-
-        // restore session if one exists
-        SessionStore.restore(LogbookApplication.mFacebook, getApplicationContext());
         SessionEvents.addAuthListener(new FbAPIsAuthListener());
         SessionEvents.addLogoutListener(new FbAPIsLogoutListener());
 

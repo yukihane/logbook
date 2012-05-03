@@ -20,7 +20,8 @@ import com.facebook.android.SessionEvents.LogoutListener;
 import com.facebook.android.SessionStore;
 
 public class LogbookApplication extends Application {
-    public static String TAG = "LOGBOOK";
+    public static final String TAG = "LOGBOOK";
+    private static final String FBAPP_ID = "368486299855660";
     public static Facebook mFacebook;
     public static AsyncFacebookRunner mAsyncRunner;
     public static String userUID = null;
@@ -50,6 +51,12 @@ public class LogbookApplication extends Application {
         super.onCreate();
         Log.i(TAG, "onCreate " + getClass().getSimpleName());
         mHandler = new Handler();
+
+        mFacebook = new Facebook(FBAPP_ID);
+        mAsyncRunner = new AsyncFacebookRunner(LogbookApplication.mFacebook);
+
+        // restore session if one exists
+        SessionStore.restore(LogbookApplication.mFacebook, getApplicationContext());
 
         mSessionListener = new SessionListener(this);
 

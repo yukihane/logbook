@@ -1,6 +1,6 @@
 package yukihane.logbook;
 
-import static yukihane.logbook.LogbookActivity.TAG;
+import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class CommentActivity extends Activity {
         setContentView(layout.main);
 
         threadID = getIntent().getStringExtra("id");
-        
+
         adapter.clear();
         LogbookApplication.mAsyncRunner.request(threadID, pageLiquestListener);
 
