@@ -7,70 +7,31 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.ItemAdapter.ReachLastItemListener;
 import yukihane.logbook.entity.Item;
 import yukihane.logbook.entity.Page;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.FacebookError;
 import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
 import com.facebook.android.SessionEvents.LogoutListener;
-import com.facebook.android.Util;
 
-public class LogbookActivity extends Activity {
-    private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
-    private final MeRequestListener pageLiquestListener = new MeRequestListener();
-    private static final int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
+public class LogbookActivity extends FacebookListActivity {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
-
-    private static final int MENU_GROUP_LOGIN_LOGOUT = 1;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
         SessionEvents.addAuthListener(new FbAPIsAuthListener());
         SessionEvents.addLogoutListener(new FbAPIsLogoutListener());
 
-        final ListView list = (ListView) findViewById(R.id.list);
-        final TextView footer = new TextView(list.getContext());
-        footer.setText("here is footer");
-        list.addFooterView(footer);
-        list.setAdapter(adapter);
-
-        list.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final ListView lv = (ListView) parent;
-                final Item we = (Item) lv.getItemAtPosition(position);
-                final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
-                intent.putExtra("id", we.getId());
-                startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
-            }
-        });
-
-        if (LogbookApplication.mFacebook.isSessionValid()) {
-            onLoginValidated();
-        }
-    }
-
-    private void onLoginValidated() {
-        adapter.clear();
-        LogbookApplication.mAsyncRunner.request("me/feed", pageLiquestListener);
+//        if (LogbookApplication.mFacebook.isSessionValid()) {
+//            onLoginValidated();
+//        }
     }
 
     @Override
@@ -88,46 +49,27 @@ public class LogbookActivity extends Activity {
         LogbookApplication.mFacebook.authorizeCallback(requestCode, resultCode, data);
     }
 
-    private class MeRequestListener extends RequestListenerAdapter {
-
-        @Override
-        public void onComplete(String response, Object state) {
-            // TODO Auto-generated method stub
-            Log.v(TAG, "MeRequestListener#onComplete");
-            try {
-                final JSONObject res = Util.parseJson(response);
-                LogbookActivity.this.runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            final Page feed = Page.fromJSONObject(res);
-                            adapter.addPage(feed);
-                        } catch (JSONException e) {
-                            Log.e(TAG, "", e);
-                        } catch (ParseException e) {
-                            Log.e(TAG, "", e);
-                        }
-                    }
-                });
-            } catch (FacebookError e) {
-                // TODO Auto-generated catch block
-                Log.e(TAG, "MeRequestListener#onComplete", e);
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                Log.e(TAG, "MeRequestListener#onComplete", e);
-            }
-        }
+    @Override
+    protected void onLoginValidated() {
+        adapter.clear();
+        requestPage();
     }
 
-    private class RequestNextPage implements ReachLastItemListener {
+    @Override
+    protected void onListItemClicked(Item item) {
+        final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
+        intent.putExtra("id", item.getId());
+        startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
+    }
 
-        @Override
-        public void fire(Bundle nextParam) {
-            if (nextParam != null) {
-                LogbookApplication.mAsyncRunner.request("me/feed", nextParam, pageLiquestListener);
-            }
-        }
+    @Override
+    protected Page createPage(JSONObject obj) throws JSONException, ParseException {
+        return Page.fromJSONObject(obj);
+    }
+
+    @Override
+    protected String getGraphPath() {
+        return "me/feed";
     }
 
     private class FbAPIsAuthListener implements AuthListener {
@@ -162,29 +104,5 @@ public class LogbookActivity extends Activity {
             Log.i(TAG, "onLogoutFinish");
             Toast.makeText(getApplicationContext(), "logged out!", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        Log.i(TAG, "onPrepareOptionsMenu " + getClass().getSimpleName());
-        menu.clear();
-
-        if (LogbookApplication.mFacebook.isSessionValid()) {
-            menu.add(MENU_GROUP_LOGIN_LOGOUT, 1, 1, "logout");
-        } else {
-            menu.add(MENU_GROUP_LOGIN_LOGOUT, 2, 1, "login");
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionsItemSelected " + getClass().getSimpleName());
-        if (item.getGroupId() == MENU_GROUP_LOGIN_LOGOUT) {
-            LogbookApplication.changeLoginStatus(LogbookActivity.this, AUTHORIZE_ACTIVITY_RESULT_CODE);
-            return true;
-        }
-        return false;
     }
 }
