@@ -38,6 +38,9 @@ public class CommentActivity extends Activity {
         setContentView(layout.main);
 
         threadID = getIntent().getStringExtra("id");
+        
+        adapter.clear();
+        LogbookApplication.mAsyncRunner.request(threadID, pageLiquestListener);
 
         final ListView list = (ListView) findViewById(id.list);
         final TextView footer = new TextView(list.getContext());
