@@ -26,7 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.BaseRequestListener;
 import com.facebook.android.FacebookError;
 import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
@@ -92,7 +92,7 @@ public class LogbookActivity extends Activity {
         LogbookApplication.mFacebook.authorizeCallback(requestCode, resultCode, data);
     }
 
-    private class MeRequestListener implements RequestListener {
+    private class MeRequestListener extends BaseRequestListener {
 
         @Override
         public void onComplete(String response, Object state) {
@@ -121,30 +121,6 @@ public class LogbookActivity extends Activity {
                 // TODO Auto-generated catch block
                 Log.e(TAG, "MeRequestListener#onComplete", e);
             }
-        }
-
-        @Override
-        public void onIOException(IOException e, Object state) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "MeRequestListener#onIOException", e);
-        }
-
-        @Override
-        public void onFileNotFoundException(FileNotFoundException e, Object state) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "MeRequestListener#onComplete", e);
-        }
-
-        @Override
-        public void onMalformedURLException(MalformedURLException e, Object state) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "MeRequestListener#onComplete", e);
-        }
-
-        @Override
-        public void onFacebookError(FacebookError e, Object state) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "MeRequestListener#onComplete", e);
         }
     }
 
