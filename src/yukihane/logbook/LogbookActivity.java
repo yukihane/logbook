@@ -224,7 +224,7 @@ public class LogbookActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected " + getClass().getSimpleName());
         if (item.getGroupId() == MENU_GROUP_LOGIN_LOGOUT) {
-            mLoginButton.onSelected();
+            LogbookApplication.changeLoginStatus(LogbookActivity.this, AUTHORIZE_ACTIVITY_RESULT_CODE);
             return true;
         }
         return false;
