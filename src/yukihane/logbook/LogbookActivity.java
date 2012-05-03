@@ -89,6 +89,15 @@ public class LogbookActivity extends Activity {
                 startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
             }
         });
+
+        if (LogbookApplication.mFacebook.isSessionValid()) {
+            onLoginValidated();
+        }
+    }
+
+    private void onLoginValidated() {
+        adapter.clear();
+        LogbookApplication.mAsyncRunner.request("me/feed", pageLiquestListener);
     }
 
     @Override
