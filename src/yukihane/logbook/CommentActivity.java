@@ -1,5 +1,7 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.LogbookActivity.TAG;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,29 +16,17 @@ import yukihane.logbook.entity.CommentsPage;
 import yukihane.logbook.entity.Page;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.facebook.android.R.id;
 import com.facebook.android.Util;
 
 public class CommentActivity extends Activity {
-    public static final String TAG = "LOGBOOK";
-    private static final String FBAPP_ID = "368486299855660";
-    private static final String ACCESS_TOKEN = "access_token";
-    private static final String ACCESS_EXPIRES = "access_expires";
-    private final Facebook facebook = new Facebook(FBAPP_ID);
-    private final AsyncFacebookRunner runner = new AsyncFacebookRunner(facebook);
-    private SharedPreferences mPrefs;
     private final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
     private String threadID;
@@ -49,8 +39,6 @@ public class CommentActivity extends Activity {
 
         threadID = getIntent().getStringExtra("id");
 
-        initSession();
-
         final ListView list = (ListView) findViewById(id.list);
         final TextView footer = new TextView(list.getContext());
         footer.setText("here is footer");
@@ -62,24 +50,7 @@ public class CommentActivity extends Activity {
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume");
-        facebook.extendAccessTokenIfNeeded(this, null);
-    }
-
-    private void initSession() {
-        final String[] permissions = { "read_stream" };
-        mPrefs = getPreferences(MODE_PRIVATE);
-        String access_token = mPrefs.getString(ACCESS_TOKEN, null);
-        long expires = mPrefs.getLong(ACCESS_EXPIRES, 0);
-        if (access_token != null) {
-            facebook.setAccessToken(access_token);
-        }
-        if (expires != 0) {
-            facebook.setAccessExpires(expires);
-        }
-
-        if (!facebook.isSessionValid()) {
-            facebook.authorize(this, permissions, new AuthorizeDialogListener());
-        }
+        LogbookApplication.mFacebook.extendAccessTokenIfNeeded(this, null);
     }
 
     @Override
@@ -88,41 +59,6 @@ public class CommentActivity extends Activity {
         //        Log.v(TAG, "onActivityResult");
         //
         //        facebook.authorizeCallback(requestCode, resultCode, data);
-    }
-
-    private class AuthorizeDialogListener implements DialogListener {
-
-        @Override
-        public void onComplete(Bundle values) {
-            // TODO Auto-generated method stub
-            Log.v(TAG, "onComplete");
-
-            final SharedPreferences.Editor editor = mPrefs.edit();
-            editor.putString(ACCESS_TOKEN, facebook.getAccessToken());
-            editor.putLong(ACCESS_EXPIRES, facebook.getAccessExpires());
-            editor.commit();
-        }
-
-        @Override
-        public void onFacebookError(FacebookError e) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "onFacebookError", e);
-
-        }
-
-        @Override
-        public void onError(DialogError e) {
-            // TODO Auto-generated method stub
-            Log.e(TAG, "onError", e);
-
-        }
-
-        @Override
-        public void onCancel() {
-            // TODO Auto-generated method stub
-            Log.v(TAG, "onCancel");
-
-        }
     }
 
     private class MeRequestListener implements RequestListener {
@@ -186,7 +122,7 @@ public class CommentActivity extends Activity {
         @Override
         public void fire(Bundle nextParam) {
             if (nextParam != null) {
-                runner.request(threadID, nextParam, pageLiquestListener);
+                LogbookApplication.mAsyncRunner.request(threadID, nextParam, pageLiquestListener);
             }
         }
     }
