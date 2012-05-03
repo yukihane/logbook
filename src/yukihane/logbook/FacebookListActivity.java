@@ -53,6 +53,11 @@ public abstract class FacebookListActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         if (LogbookApplication.mFacebook.isSessionValid()) {
             onLoginValidated();
         }
