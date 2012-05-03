@@ -2,6 +2,7 @@ package yukihane.logbook;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +12,12 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.BaseRequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.facebook.android.SessionEvents;
-import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.SessionEvents.AuthListener;
+import com.facebook.android.SessionEvents.LogoutListener;
+import com.facebook.android.SessionStore;
 
 public class LogbookApplication extends Application {
     public static String TAG = "LOGBOOK";
@@ -23,6 +27,7 @@ public class LogbookApplication extends Application {
     public static String objectID = null;
     private static final String[] defaultPermissions = { "read_stream" };
     private static Handler mHandler;
+    private SessionListener mSessionListener;
 
     public static void changeLoginStatus(Activity activity, int activityCode) {
         if (mFacebook.isSessionValid()) {
@@ -45,6 +50,11 @@ public class LogbookApplication extends Application {
         super.onCreate();
         Log.i(TAG, "onCreate " + getClass().getSimpleName());
         mHandler = new Handler();
+
+        mSessionListener = new SessionListener(this);
+
+        SessionEvents.addAuthListener(mSessionListener);
+        SessionEvents.addLogoutListener(mSessionListener);
 
     }
 
@@ -95,6 +105,31 @@ public class LogbookApplication extends Application {
                     SessionEvents.onLogoutFinish();
                 }
             });
+        }
+    }
+
+    private static class SessionListener implements AuthListener, LogoutListener {
+        private final Context context;
+
+        private SessionListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onAuthSucceed() {
+            SessionStore.save(mFacebook, this.context);
+        }
+
+        @Override
+        public void onAuthFail(String error) {
+        }
+
+        @Override
+        public void onLogoutBegin() {
+        }
+
+        @Override
+        public void onLogoutFinish() {
         }
     }
 
