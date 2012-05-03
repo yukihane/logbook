@@ -1,6 +1,6 @@
 package yukihane.logbook;
 
-import static yukihane.logbook.LogbookActivity.TAG;
+import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package yukihane.logbook.entity;
 
-import static yukihane.logbook.LogbookActivity.TAG;
+import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
