@@ -17,9 +17,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,16 +50,6 @@ public class CommentActivity extends Activity {
         threadID = getIntent().getStringExtra("id");
 
         initSession();
-
-        final Button btnReload = (Button) findViewById(id.reloadbutton);
-        btnReload.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                adapter.clear();
-                runner.request(threadID, pageLiquestListener);
-            }
-        });
 
         final ListView list = (ListView) findViewById(id.list);
         final TextView footer = new TextView(list.getContext());
@@ -98,9 +85,9 @@ public class CommentActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.v(TAG, "onActivityResult");
-//
-//        facebook.authorizeCallback(requestCode, resultCode, data);
+        //        Log.v(TAG, "onActivityResult");
+        //
+        //        facebook.authorizeCallback(requestCode, resultCode, data);
     }
 
     private class AuthorizeDialogListener implements DialogListener {

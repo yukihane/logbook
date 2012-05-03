@@ -16,10 +16,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,16 +60,6 @@ public class LogbookActivity extends Activity {
 
         final String[] permissions = { "read_stream" };
         mLoginButton.init(this, AUTHORIZE_ACTIVITY_RESULT_CODE, LogbookApplication.mFacebook, permissions);
-
-        final Button btnReload = (Button) findViewById(R.id.reloadbutton);
-        btnReload.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                adapter.clear();
-                LogbookApplication.mAsyncRunner.request("me/feed", pageLiquestListener);
-            }
-        });
 
         final ListView list = (ListView) findViewById(R.id.list);
         final TextView footer = new TextView(list.getContext());
