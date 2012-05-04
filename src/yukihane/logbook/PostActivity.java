@@ -1,17 +1,18 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.LogbookApplication.TAG;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,19 +20,17 @@ import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.FacebookError;
 
 public class PostActivity extends Activity {
+    private String postGraphPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
 
-        final Button btn = (Button) findViewById(R.id.post_button);
-        btn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                post();
-            }
-        });
+        final Intent intent = getIntent();
+        postGraphPath = intent.getStringExtra("graphPath");
+
+        Log.i(TAG, getClass().getSimpleName() + " onCreate " + intent.toString());
     }
 
     @Override
@@ -64,7 +63,7 @@ public class PostActivity extends Activity {
             b.putString("link", linkText.toString());
         }
 
-        LogbookApplication.mAsyncRunner.request("me/feed", b, "POST", new PostRequestListener(), null);
+        LogbookApplication.mAsyncRunner.request(postGraphPath, b, "POST", new PostRequestListener(), null);
     }
 
     private class PostRequestListener implements RequestListener {

@@ -166,8 +166,8 @@ public abstract class FacebookListActivity extends Activity {
             return true;
         } else if (item.getItemId() == MENU_POST) {
             final Intent intent = new Intent(getBaseContext(), PostActivity.class);
-            intent.setType("wall");
-            startActivityForResult(intent, RESULT_CODE_POST_ACTIVITY);
+            intent.putExtra("graphPath", getPostGraphPath());
+            startActivity(intent);
             return true;
         }
         return false;
