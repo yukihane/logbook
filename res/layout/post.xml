@@ -4,13 +4,14 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
+    <EditText
         android:id="@+id/post_text"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/post_button"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:gravity="top" />
 
     <Button
         android:id="@+id/post_button"
