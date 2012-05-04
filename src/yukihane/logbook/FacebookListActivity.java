@@ -28,9 +28,12 @@ import com.facebook.android.Util;
 public abstract class FacebookListActivity extends Activity {
     protected final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
-    private static final int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
+    private static final int RESULT_CODE_AUTHORIZE_ACTIVITY = 0;
+    private static final int RESULT_CODE_POST_ACTIVITY = 1;
 
     private static final int MENU_GROUP_LOGIN_LOGOUT = 1;
+
+    private static final int MENU_POST = 2;
 
     /** Called when the activity is first created. */
     @Override
@@ -70,6 +73,8 @@ public abstract class FacebookListActivity extends Activity {
     protected abstract Page createPage(JSONObject obj) throws JSONException, ParseException;
 
     protected abstract String getGraphPath();
+    
+    protected abstract String getPostGraphPath();
 
     @Override
     public void onResume() {
@@ -148,6 +153,7 @@ public abstract class FacebookListActivity extends Activity {
         } else {
             menu.add(MENU_GROUP_LOGIN_LOGOUT, 2, 1, "login");
         }
+        menu.add(Menu.NONE, MENU_POST, 2, "post");
 
         return true;
     }
@@ -156,7 +162,12 @@ public abstract class FacebookListActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected " + getClass().getSimpleName());
         if (item.getGroupId() == MENU_GROUP_LOGIN_LOGOUT) {
-            LogbookApplication.changeLoginStatus(FacebookListActivity.this, AUTHORIZE_ACTIVITY_RESULT_CODE);
+            LogbookApplication.changeLoginStatus(FacebookListActivity.this, RESULT_CODE_AUTHORIZE_ACTIVITY);
+            return true;
+        } else if (item.getItemId() == MENU_POST) {
+            final Intent intent = new Intent(getBaseContext(), PostActivity.class);
+            intent.putExtra("graphPath", getPostGraphPath());
+            startActivity(intent);
             return true;
         }
         return false;

@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CommentActivity" />
+        <activity android:name=".PostActivity" />
     </application>
 
 </manifest>

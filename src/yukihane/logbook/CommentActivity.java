@@ -41,4 +41,9 @@ public class CommentActivity extends FacebookListActivity {
     protected String getGraphPath() {
         return threadID;
     }
+
+    @Override
+    protected String getPostGraphPath() {
+        return threadID + "/comments";
+    }
 }

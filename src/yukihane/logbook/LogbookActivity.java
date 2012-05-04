@@ -29,9 +29,9 @@ public class LogbookActivity extends FacebookListActivity {
         SessionEvents.addAuthListener(new FbAPIsAuthListener());
         SessionEvents.addLogoutListener(new FbAPIsLogoutListener());
 
-//        if (LogbookApplication.mFacebook.isSessionValid()) {
-//            onLoginValidated();
-//        }
+        //        if (LogbookApplication.mFacebook.isSessionValid()) {
+        //            onLoginValidated();
+        //        }
     }
 
     @Override
@@ -72,6 +72,11 @@ public class LogbookActivity extends FacebookListActivity {
     @Override
     protected String getGraphPath() {
         return "me/feed";
+    }
+
+    @Override
+    protected String getPostGraphPath() {
+        return getGraphPath();
     }
 
     private class FbAPIsAuthListener implements AuthListener {
