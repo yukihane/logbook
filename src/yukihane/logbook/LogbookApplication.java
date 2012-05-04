@@ -25,7 +25,7 @@ public class LogbookApplication extends Application {
     public static AsyncFacebookRunner mAsyncRunner;
     public static String userUID = null;
     public static String objectID = null;
-    private static final String[] defaultPermissions = { "read_stream" };
+    private static final String[] defaultPermissions = { "read_stream","publish_stream" };
     private static Handler mHandler;
     private SessionListener mSessionListener;
 
