@@ -18,23 +18,28 @@ public class CommentsPage extends Page {
 
     public static Page fromJSONObject(JSONObject obj) throws JSONException, ParseException {
         final JSONObject commentsObj = obj.getJSONObject("comments");
-        final JSONArray data = commentsObj.getJSONArray("data");
-        final int length = data.length();
-        final List<Item> it = new ArrayList<Item>(length);
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        for (int i = 0; i < length; i++) {
-            final JSONObject m = data.getJSONObject(i);
-            final String id = m.getString("id");
-            final String message = m.optString("message");
-            final String createdTimeStr = m.getString("created_time");
-            final Date createdTime = sdf.parse(createdTimeStr);
-            final Date updatedTime = createdTime;
+        final JSONArray data = commentsObj.optJSONArray("data");
+        final List<Item> it;
+        if (data != null) {
+            final int length = data.length();
+            it = new ArrayList<Item>(length);
+            final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            for (int i = 0; i < length; i++) {
+                final JSONObject m = data.getJSONObject(i);
+                final String id = m.getString("id");
+                final String message = m.optString("message");
+                final String createdTimeStr = m.getString("created_time");
+                final Date createdTime = sdf.parse(createdTimeStr);
+                final Date updatedTime = createdTime;
 
-            final JSONObject fromObj = m.getJSONObject("from");
-            final String userName = fromObj.getString("name");
-            final String userID = fromObj.getString("id");
+                final JSONObject fromObj = m.getJSONObject("from");
+                final String userName = fromObj.getString("name");
+                final String userID = fromObj.getString("id");
 
-            it.add(new Item(id, "comment", message, userID, userName, createdTime, updatedTime, 0));
+                it.add(new Item(id, "comment", message, userID, userName, createdTime, updatedTime, 0));
+            }
+        } else {
+            it = new ArrayList<Item>(0);
         }
 
         return new Page(it, null);
