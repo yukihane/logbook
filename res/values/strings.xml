@@ -5,5 +5,9 @@
     <string name="app_name">logbook</string>
     <string name="logout">logout</string>
     <string name="reload">reload</string>
+    <string name="post">Post</string>
+    <string name="open">Open…</string>
+    <string name="hint_message">message</string>
+    <string name="hint_link">URL or local photo</string>
 
 </resources>
