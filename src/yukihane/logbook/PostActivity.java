@@ -34,6 +34,7 @@ public class PostActivity extends Activity {
                             @Override
                             public void run() {
                                 Toast.makeText(getApplicationContext(), "post success", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         });
                     }
