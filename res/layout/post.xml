@@ -5,13 +5,30 @@
     android:orientation="vertical" >
 
     <EditText
+        android:id="@+id/post_link"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/post_openlink"
+        android:hint="URL or local photo" />
+
+    <Button
+        android:id="@+id/post_openlink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="open" />
+
+    <EditText
         android:id="@+id/post_text"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/post_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:gravity="top" />
+        android:layout_below="@+id/post_link"
+        android:gravity="top"
+        android:hint="message" />
 
     <Button
         android:id="@+id/post_button"
