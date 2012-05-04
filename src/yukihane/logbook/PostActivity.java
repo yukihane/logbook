@@ -5,6 +5,9 @@ import static yukihane.logbook.LogbookApplication.TAG;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,9 +31,27 @@ public class PostActivity extends Activity {
         setContentView(R.layout.post);
 
         final Intent intent = getIntent();
-        postGraphPath = intent.getStringExtra("graphPath");
 
         Log.i(TAG, getClass().getSimpleName() + " onCreate " + intent.toString());
+        final Bundle extras = intent.getExtras();
+        Log.i(TAG, Arrays.toString(extras.keySet().toArray()));
+
+        postGraphPath = intent.getStringExtra("graphPath");
+        if (postGraphPath == null) {
+            postGraphPath = "me/feed";
+        }
+
+        final String text = intent.getStringExtra("android.intent.extra.TEXT");
+        if (text != null) {
+            final Pattern urlPattern = Pattern.compile("^https?://");
+            final Matcher m = urlPattern.matcher(text);
+            final boolean found = m.find();
+
+            final int widgID = found ? R.id.post_link : R.id.post_text;
+            final EditText et = (EditText) findViewById(widgID);
+            et.setText(text);
+        }
+
     }
 
     @Override
