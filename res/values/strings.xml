@@ -8,6 +8,6 @@
     <string name="post">Post</string>
     <string name="open">Open…</string>
     <string name="hint_message">message</string>
-    <string name="hint_link">URL or local photo</string>
+    <string name="hint_link">link</string>
 
 </resources>
