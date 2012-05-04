@@ -73,6 +73,8 @@ public abstract class FacebookListActivity extends Activity {
     protected abstract Page createPage(JSONObject obj) throws JSONException, ParseException;
 
     protected abstract String getGraphPath();
+    
+    protected abstract String getPostGraphPath();
 
     @Override
     public void onResume() {
