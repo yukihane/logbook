@@ -12,10 +12,10 @@ import org.w3c.dom.Comment;
  */
 public class Item {
 
-    private final String id;
-    private final String type;
-    private final String message;
-    private final String userID;
+    private String id;
+    private String type;
+    private String message;
+    private String userID;
     private String userName;
     private final Date createdTime;
     private Date updatedTime;
