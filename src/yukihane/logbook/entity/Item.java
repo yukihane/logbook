@@ -22,7 +22,58 @@ public class Item {
     private List<Comment> comments;
     private int commentsCount;
 
-    public Item(String id, String type, String message, String userID, String userName, Date createdTime,
+    public static class ItemBuilder {
+        private final String id;
+        private final String type;
+        private String userID;
+        private Date createdTime;
+        private String message;
+        private String userName;
+        private Date updatedTime;
+        private int commentsCount;
+
+        public ItemBuilder(String id, String type) {
+            this.id = id;
+            this.type = type;
+        }
+
+        public Item build() {
+            return new Item(id, type, message, userID, userName, createdTime, updatedTime, commentsCount);
+        }
+
+        public ItemBuilder setMessage(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public ItemBuilder setUserID(String userID) {
+            this.userID = userID;
+            return this;
+        }
+
+        public ItemBuilder setUserName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public ItemBuilder setCreatedTime(Date createdTime) {
+            this.createdTime = createdTime;
+            return this;
+        }
+
+        public ItemBuilder setUpdatedTime(Date updatedTime) {
+            this.updatedTime = updatedTime;
+            return this;
+        }
+
+        public ItemBuilder setCommentCount(int commentCount) {
+            this.commentsCount = commentCount;
+            return this;
+        }
+
+    }
+
+    private Item(String id, String type, String message, String userID, String userName, Date createdTime,
             Date updatedTime, int commentsCount) {
         this.id = id;
         this.type = type;

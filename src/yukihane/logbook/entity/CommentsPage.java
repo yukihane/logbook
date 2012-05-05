@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import yukihane.logbook.entity.Item.ItemBuilder;
+
 public class CommentsPage extends Page {
 
     private CommentsPage(List<Item> items) {
@@ -36,7 +38,10 @@ public class CommentsPage extends Page {
                 final String userName = fromObj.getString("name");
                 final String userID = fromObj.getString("id");
 
-                it.add(new Item(id, "comment", message, userID, userName, createdTime, updatedTime, 0));
+                final ItemBuilder ib = new ItemBuilder(id, "comment");
+                final Item item = ib.setMessage(message).setUserID(userID).setUserName(userName)
+                        .setCreatedTime(createdTime).setUpdatedTime(updatedTime).setCommentCount(0).build();
+                it.add(item);
             }
         } else {
             it = new ArrayList<Item>(0);
