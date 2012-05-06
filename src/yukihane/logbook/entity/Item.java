@@ -1,9 +1,6 @@
 package yukihane.logbook.entity;
 
 import java.util.Date;
-import java.util.List;
-
-import org.w3c.dom.Comment;
 
 /**
  * ページに表示するひとつひとつの項目.
@@ -19,7 +16,6 @@ public class Item {
     private String userName;
     private final Date createdTime;
     private Date updatedTime;
-    private List<Comment> comments;
     private int commentsCount;
 
     public static class Builder {
