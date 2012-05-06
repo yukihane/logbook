@@ -87,12 +87,16 @@ public class ItemAdapter extends BaseAdapter {
             if (picture != null) {
                 final Bitmap bm = LogbookApplication.getBitmap(picture.toString());
                 iv.setImageBitmap(bm);
+            } else {
+                iv.setImageBitmap(null);
             }
 
             final String linkName = item.getLinkName();
             final TextView linkTV = (TextView) v.findViewById(R.id.rowlinkname);
             if (linkName != null) {
                 linkTV.setText(linkName);
+            } else {
+                linkTV.setText("");
             }
 
             final URL link = item.getLink();
@@ -115,6 +119,9 @@ public class ItemAdapter extends BaseAdapter {
                     linkTV.setTag("link");
                 }
                 linkTV.setOnClickListener(listener);
+            } else {
+                iv.setOnClickListener(null);
+                linkTV.setOnClickListener(null);
             }
 
         }
