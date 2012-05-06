@@ -48,16 +48,15 @@ public class Item {
                 + userName + ", update time: " + updatedTime;
     }
 
-    private Item(String id, String type, String message, String userID, String userName, Date createdTime,
-            Date updatedTime, int commentsCount) {
-        this.id = id;
-        this.type = type;
-        this.message = message;
-        this.userID = userID;
-        this.userName = userName;
-        this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
-        this.commentsCount = commentsCount;
+    protected Item(Builder<?> b) {
+        this.id = b.id;
+        this.type = b.type;
+        this.message = b.message;
+        this.userID = b.userID;
+        this.userName = b.userName;
+        this.createdTime = b.createdTime;
+        this.updatedTime = b.updatedTime;
+        this.commentsCount = b.commentsCount;
     }
 
     public static abstract class Builder<T extends Builder<T>> {
@@ -78,7 +77,7 @@ public class Item {
         }
 
         public Item build() {
-            return new Item(id, type, message, userID, userName, createdTime, updatedTime, commentsCount);
+            return new Item(this);
         }
 
         public T message(String message) {
