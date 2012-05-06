@@ -157,7 +157,7 @@ public class Item {
         }
 
         public T linkName(String name) {
-            this.linkName = name;
+            this.linkName = (name != null && name.length() > 0) ? name : null;
             return self();
         }
     }
