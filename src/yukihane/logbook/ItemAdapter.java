@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -85,8 +86,7 @@ public class ItemAdapter extends BaseAdapter {
             final URL picture = item.getPicture();
             final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
             if (picture != null) {
-                final Bitmap bm = LogbookApplication.getBitmap(picture.toString());
-                iv.setImageBitmap(bm);
+                new DownloadImageTask(iv).execute(picture.toString());
             } else {
                 iv.setImageBitmap(null);
             }
@@ -138,5 +138,25 @@ public class ItemAdapter extends BaseAdapter {
     public interface ReachLastItemListener {
 
         void fire(Bundle nextParam);
+    }
+
+    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        private final ImageView iv;
+
+        private DownloadImageTask(ImageView iv) {
+            super();
+            this.iv = iv;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return LogbookApplication.getBitmap(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            iv.setImageBitmap(result);
+        }
     }
 }
