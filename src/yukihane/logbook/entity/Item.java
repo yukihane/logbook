@@ -85,7 +85,7 @@ public class Item {
         this.commentsCount = commentsCount;
     }
 
-    public String getId() {
+    public String getID() {
         return id;
     }
 
