@@ -85,10 +85,10 @@ public class ItemAdapter extends BaseAdapter {
 
             final URL picture = item.getPicture();
             final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
+
+            iv.setImageBitmap(null);
             if (picture != null) {
                 new DownloadImageTask(iv).execute(picture.toString());
-            } else {
-                iv.setImageBitmap(null);
             }
 
             final String linkName = item.getLinkName();
