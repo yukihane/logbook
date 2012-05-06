@@ -18,6 +18,10 @@ public class Item {
     private Date updatedTime;
     private int commentsCount;
 
+    public static Builder<?> builder(String id, String type) {
+        return new Builder2(id, type);
+    }
+
     public String getID() {
         return id;
     }
@@ -56,7 +60,7 @@ public class Item {
         this.commentsCount = commentsCount;
     }
 
-    public static class Builder {
+    public static abstract class Builder<T extends Builder<T>> {
         private final String id;
         private final String type;
         private String userID;
@@ -65,6 +69,8 @@ public class Item {
         private String userName;
         private Date updatedTime;
         private int commentsCount;
+
+        protected abstract T self();
 
         public Builder(String id, String type) {
             this.id = id;
@@ -75,35 +81,46 @@ public class Item {
             return new Item(id, type, message, userID, userName, createdTime, updatedTime, commentsCount);
         }
 
-        public Builder message(String message) {
+        public T message(String message) {
             this.message = message;
-            return this;
+            return self();
         }
 
-        public Builder userID(String userID) {
+        public T userID(String userID) {
             this.userID = userID;
-            return this;
+            return self();
         }
 
-        public Builder userName(String userName) {
+        public T userName(String userName) {
             this.userName = userName;
-            return this;
+            return self();
         }
 
-        public Builder createdTime(Date createdTime) {
+        public T createdTime(Date createdTime) {
             this.createdTime = createdTime;
-            return this;
+            return self();
         }
 
-        public Builder updatedTime(Date updatedTime) {
+        public T updatedTime(Date updatedTime) {
             this.updatedTime = updatedTime;
-            return this;
+            return self();
         }
 
-        public Builder commentCount(int commentCount) {
+        public T commentCount(int commentCount) {
             this.commentsCount = commentCount;
-            return this;
+            return self();
+        }
+    }
+
+    private static final class Builder2 extends Builder<Builder2> {
+
+        public Builder2(String id, String type) {
+            super(id, type);
         }
 
+        @Override
+        protected Builder2 self() {
+            return this;
+        }
     }
 }

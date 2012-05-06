@@ -47,10 +47,8 @@ public class Page {
             final JSONObject commentsObj = m.getJSONObject("comments");
             int commentCount = commentsObj.getInt("count");
 
-            final Builder ib = new Builder(id, type);
-            ib.message(message).userID(userID).userName(userName).createdTime(createdTime)
-                    .updatedTime(updatedTime).commentCount(commentCount);
-            final Item item = ib.build();
+            final Item item = Item.builder(id, type).message(message).userID(userID).userName(userName)
+                    .createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount).build();
             it.add(item);
         }
 

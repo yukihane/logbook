@@ -38,8 +38,7 @@ public class CommentsPage extends Page {
                 final String userName = fromObj.getString("name");
                 final String userID = fromObj.getString("id");
 
-                final Builder ib = new Builder(id, "comment");
-                final Item item = ib.message(message).userID(userID).userName(userName)
+                final Item item = Item.builder(id, "comment").message(message).userID(userID).userName(userName)
                         .createdTime(createdTime).updatedTime(updatedTime).commentCount(0).build();
                 it.add(item);
             }
