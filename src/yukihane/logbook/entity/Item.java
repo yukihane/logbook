@@ -128,18 +128,18 @@ public class Item {
 
         public T picture(String picture) {
             try {
-                this.picture = (picture != null) ? new URL(picture) : null;
+                this.picture = (picture != null && picture.length() > 0) ? new URL(picture) : null;
             } catch (MalformedURLException e) {
-                throw new IllegalArgumentException(e);
+                throw new IllegalArgumentException("illegal picture url: " + picture + ",id:" + id + ",type:" + type, e);
             }
             return self();
         }
 
         public T link(String link) {
             try {
-                this.link = (link != null) ? new URL(link) : null;
+                this.link = (link != null && link.length() > 0) ? new URL(link) : null;
             } catch (MalformedURLException e) {
-                throw new IllegalArgumentException(e);
+                throw new IllegalArgumentException("illegal link url: " + picture + ",id:" + id + ",type:" + type, e);
             }
             return self();
         }

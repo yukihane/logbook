@@ -47,8 +47,13 @@ public class Page {
             final JSONObject commentsObj = m.getJSONObject("comments");
             int commentCount = commentsObj.getInt("count");
 
+            final String picture = m.optString("picture");
+            final String link = m.optString("link");
+            final String linkName = m.optString("name");
+
             final Item item = Item.builder(id, type).message(message).userID(userID).userName(userName)
-                    .createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount).build();
+                    .createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount).picture(picture)
+                    .link(link).linkName(linkName).build();
             it.add(item);
         }
 
