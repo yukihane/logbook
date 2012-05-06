@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.entity.Item.ItemBuilder;
+import yukihane.logbook.entity.Item.Builder;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -47,7 +47,7 @@ public class Page {
             final JSONObject commentsObj = m.getJSONObject("comments");
             int commentCount = commentsObj.getInt("count");
 
-            final ItemBuilder ib = new ItemBuilder(id, type);
+            final Builder ib = new Builder(id, type);
             ib.setMessage(message).setUserID(userID).setUserName(userName).setCreatedTime(createdTime)
                     .setUpdatedTime(updatedTime).setCommentCount(commentCount);
             final Item item = ib.build();
