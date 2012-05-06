@@ -18,6 +18,44 @@ public class Item {
     private Date updatedTime;
     private int commentsCount;
 
+    public String getID() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getHeader() {
+        return "" + userName + "  " + updatedTime + "(" + commentsCount + ")" + " " + type;
+    }
+
+    public String getBody() {
+        return "" + message;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + commentsCount + ")" + "id:" + id + ", type:" + type + ", \nmessage:" + message + ", \nuser name: "
+                + userName + ", update time: " + updatedTime;
+    }
+
+    private Item(String id, String type, String message, String userID, String userName, Date createdTime,
+            Date updatedTime, int commentsCount) {
+        this.id = id;
+        this.type = type;
+        this.message = message;
+        this.userID = userID;
+        this.userName = userName;
+        this.createdTime = createdTime;
+        this.updatedTime = updatedTime;
+        this.commentsCount = commentsCount;
+    }
+
     public static class Builder {
         private final String id;
         private final String type;
@@ -67,43 +105,5 @@ public class Item {
             return this;
         }
 
-    }
-
-    private Item(String id, String type, String message, String userID, String userName, Date createdTime,
-            Date updatedTime, int commentsCount) {
-        this.id = id;
-        this.type = type;
-        this.message = message;
-        this.userID = userID;
-        this.userName = userName;
-        this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
-        this.commentsCount = commentsCount;
-    }
-
-    public String getID() {
-        return id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getHeader() {
-        return "" + userName + "  " + updatedTime + "(" + commentsCount + ")" + " " + type;
-    }
-
-    public String getBody() {
-        return "" + message;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + commentsCount + ")" + "id:" + id + ", type:" + type + ", \nmessage:" + message + ", \nuser name: "
-                + userName + ", update time: " + updatedTime;
     }
 }
