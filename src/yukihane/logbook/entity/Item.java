@@ -1,5 +1,7 @@
 package yukihane.logbook.entity;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -12,11 +14,16 @@ public class Item {
     private String id;
     private String type;
     private String message;
-    private String userID;
     private String userName;
-    private final Date createdTime;
     private Date updatedTime;
     private int commentsCount;
+
+    private String userID;
+    private final Date createdTime;
+
+    private URL picture;
+    private URL link;
+    private String linkName;
 
     public static Builder<?> builder(String id, String type) {
         return new Builder2(id, type);
@@ -57,17 +64,26 @@ public class Item {
         this.createdTime = b.createdTime;
         this.updatedTime = b.updatedTime;
         this.commentsCount = b.commentsCount;
+
+        this.picture = b.picture;
+        this.link = b.link;
+        this.linkName = b.linkName;
     }
 
     public static abstract class Builder<T extends Builder<T>> {
         private final String id;
         private final String type;
-        private String userID;
-        private Date createdTime;
         private String message;
         private String userName;
         private Date updatedTime;
         private int commentsCount;
+
+        private String userID;
+        private Date createdTime;
+
+        private URL picture;
+        private URL link;
+        private String linkName;
 
         protected abstract T self();
 
@@ -107,6 +123,29 @@ public class Item {
 
         public T commentCount(int commentCount) {
             this.commentsCount = commentCount;
+            return self();
+        }
+
+        public T picture(String picture) {
+            try {
+                this.picture = (picture != null) ? new URL(picture) : null;
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException(e);
+            }
+            return self();
+        }
+
+        public T link(String link) {
+            try {
+                this.link = (link != null) ? new URL(link) : null;
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException(e);
+            }
+            return self();
+        }
+
+        public T linkName(String name) {
+            this.linkName = name;
             return self();
         }
     }
