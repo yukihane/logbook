@@ -31,7 +31,9 @@
         <TextView
             android:id="@+id/rowlinkname"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textStyle="italic" />
     </LinearLayout>
 
 </LinearLayout>
