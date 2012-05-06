@@ -48,8 +48,8 @@ public class Page {
             int commentCount = commentsObj.getInt("count");
 
             final Builder ib = new Builder(id, type);
-            ib.setMessage(message).setUserID(userID).setUserName(userName).setCreatedTime(createdTime)
-                    .setUpdatedTime(updatedTime).setCommentCount(commentCount);
+            ib.message(message).userID(userID).userName(userName).createdTime(createdTime)
+                    .updatedTime(updatedTime).commentCount(commentCount);
             final Item item = ib.build();
             it.add(item);
         }

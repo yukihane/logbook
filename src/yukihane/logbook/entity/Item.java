@@ -41,32 +41,32 @@ public class Item {
             return new Item(id, type, message, userID, userName, createdTime, updatedTime, commentsCount);
         }
 
-        public Builder setMessage(String message) {
+        public Builder message(String message) {
             this.message = message;
             return this;
         }
 
-        public Builder setUserID(String userID) {
+        public Builder userID(String userID) {
             this.userID = userID;
             return this;
         }
 
-        public Builder setUserName(String userName) {
+        public Builder userName(String userName) {
             this.userName = userName;
             return this;
         }
 
-        public Builder setCreatedTime(Date createdTime) {
+        public Builder createdTime(Date createdTime) {
             this.createdTime = createdTime;
             return this;
         }
 
-        public Builder setUpdatedTime(Date updatedTime) {
+        public Builder updatedTime(Date updatedTime) {
             this.updatedTime = updatedTime;
             return this;
         }
 
-        public Builder setCommentCount(int commentCount) {
+        public Builder commentCount(int commentCount) {
             this.commentsCount = commentCount;
             return this;
         }
