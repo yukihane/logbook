@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import yukihane.logbook.entity.Item.Builder;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -46,7 +47,14 @@ public class Page {
             final JSONObject commentsObj = m.getJSONObject("comments");
             int commentCount = commentsObj.getInt("count");
 
-            it.add(new Item(id, type, message, userID, userName, createdTime, updatedTime, commentCount));
+            final String picture = m.optString("picture");
+            final String link = m.optString("link");
+            final String linkName = m.optString("name");
+
+            final Item item = Item.builder(id, type).message(message).userID(userID).userName(userName)
+                    .createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount).picture(picture)
+                    .link(link).linkName(linkName).build();
+            it.add(item);
         }
 
         final JSONObject paging = obj.optJSONObject("paging");

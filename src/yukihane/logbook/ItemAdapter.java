@@ -2,20 +2,25 @@ package yukihane.logbook;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import yukihane.logbook.R.id;
-import yukihane.logbook.R.layout;
 import yukihane.logbook.entity.Item;
 import yukihane.logbook.entity.Page;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ItemAdapter extends BaseAdapter {
@@ -68,15 +73,57 @@ public class ItemAdapter extends BaseAdapter {
         if (v == null) {
             final LayoutInflater inflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(layout.item_display, null);
+            v = inflater.inflate(R.layout.item_display, null);
         }
 
         final Item item = (Item) getItem(position);
         if (item != null) {
-            final TextView header = (TextView) v.findViewById(id.rowheader);
+            final TextView header = (TextView) v.findViewById(R.id.rowheader);
             header.setText(item.getHeader());
-            final TextView textView = (TextView) v.findViewById(id.rowitem);
+            final TextView textView = (TextView) v.findViewById(R.id.rowitem);
             textView.setText(item.getBody());
+
+            final URL picture = item.getPicture();
+            final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
+
+            iv.setImageBitmap(null);
+            if (picture != null) {
+                new DownloadImageTask(iv).execute(picture.toString());
+            }
+
+            final String linkName = item.getLinkName();
+            final TextView linkTV = (TextView) v.findViewById(R.id.rowlinkname);
+            if (linkName != null) {
+                linkTV.setText(linkName);
+            } else {
+                linkTV.setText("");
+            }
+
+            final URL link = item.getLink();
+            if (link != null) {
+                final OnClickListener listener = new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        final Uri uri = Uri.parse(link.toString());
+                        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        v.getContext().startActivity(intent);
+                    }
+                };
+
+                if (picture != null) {
+                    iv.setOnClickListener(listener);
+                }
+
+                if (linkName == null) {
+                    linkTV.setTag("link");
+                }
+                linkTV.setOnClickListener(listener);
+            } else {
+                iv.setOnClickListener(null);
+                linkTV.setOnClickListener(null);
+            }
+
         }
 
         if (!fired && position >= getCount() - 1) {
@@ -91,5 +138,25 @@ public class ItemAdapter extends BaseAdapter {
     public interface ReachLastItemListener {
 
         void fire(Bundle nextParam);
+    }
+
+    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        private final ImageView iv;
+
+        private DownloadImageTask(ImageView iv) {
+            super();
+            this.iv = iv;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return LogbookApplication.getBitmap(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            iv.setImageBitmap(result);
+        }
     }
 }

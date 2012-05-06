@@ -60,7 +60,7 @@ public class LogbookActivity extends FacebookListActivity {
     @Override
     protected void onListItemClicked(Item item) {
         final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
-        intent.putExtra("id", item.getId());
+        intent.putExtra("id", item.getID());
         startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
     }
 
