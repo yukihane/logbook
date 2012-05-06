@@ -41,6 +41,18 @@ public class Item {
         return message;
     }
 
+    public URL getPicture() {
+        return picture;
+    }
+
+    public URL getLink() {
+        return link;
+    }
+
+    public String getLinkName() {
+        return linkName;
+    }
+
     public String getHeader() {
         return "" + userName + "  " + updatedTime + "(" + commentsCount + ")" + " " + type;
     }
