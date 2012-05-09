@@ -4,6 +4,8 @@ import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import yukihane.logbook.entity.Item;
@@ -42,6 +44,12 @@ public class ItemAdapter extends BaseAdapter {
         fired = false;
         nextParam = feed2.getNextParam();
         items.addAll(feed2.getItems());
+        Collections.sort(items, new Comparator<Item>() {
+            @Override
+            public int compare(Item lhs, Item rhs) {
+                return -1 * lhs.compareTo(rhs);
+            }
+        });
         notifyDataSetChanged();
     }
 

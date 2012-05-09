@@ -9,7 +9,7 @@ import java.util.Date;
  * @author yuki
  *
  */
-public class Item {
+public class Item implements Comparable<Item> {
 
     private String id;
     private String type;
@@ -65,6 +65,13 @@ public class Item {
     public String toString() {
         return "(" + commentsCount + ")" + "id:" + id + ", type:" + type + ", \nmessage:" + message + ", \nuser name: "
                 + userName + ", update time: " + updatedTime;
+    }
+
+    @Override
+    public int compareTo(Item another) {
+        final Date me = (updatedTime != null) ? updatedTime : createdTime;
+        final Date you = (another.updatedTime != null) ? another.updatedTime : another.createdTime;
+        return me.getTime() == you.getTime() ? 0 : me.getTime() > you.getTime() ? 1 : -1;
     }
 
     protected Item(Builder<?> b) {
