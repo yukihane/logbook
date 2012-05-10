@@ -1,5 +1,6 @@
 package yukihane.logbook;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 
 import org.json.JSONException;
@@ -8,6 +9,8 @@ import org.json.JSONObject;
 import yukihane.logbook.entity.Comment;
 import yukihane.logbook.structure.CommentsPage;
 import android.os.Bundle;
+
+import com.j256.ormlite.dao.Dao;
 
 public class CommentActivity extends FacebookListActivity<Comment, CommentsPage> {
 
@@ -52,5 +55,10 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     @Override
     protected ItemAdapter<Comment, CommentsPage> getItemAdapter() {
         return adapter;
+    }
+
+    @Override
+    protected Dao<Comment, String> getDao() throws SQLException {
+        return getHelper().getCommentDao();
     }
 }

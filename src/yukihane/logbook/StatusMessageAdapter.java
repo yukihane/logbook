@@ -1,7 +1,5 @@
 package yukihane.logbook;
 
-import java.net.URL;
-
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.FeedPage;
 import android.content.Context;
@@ -27,7 +25,7 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
         final StatusMessage item = (StatusMessage) getItem(position);
         if (item != null) {
-            final URL picture = item.getPicture();
+            final String picture = item.getPicture();
             final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
 
             iv.setImageBitmap(null);
@@ -43,7 +41,7 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
                 linkTV.setText("");
             }
 
-            final URL link = item.getLink();
+            final String link = item.getLink();
             if (link != null) {
                 final OnClickListener listener = new OnClickListener() {
 

@@ -2,6 +2,8 @@ package yukihane.logbook.entity;
 
 import java.util.Date;
 
+import com.j256.ormlite.field.DatabaseField;
+
 /**
  * ページに表示するひとつひとつの項目.
  * @author yuki
@@ -9,18 +11,29 @@ import java.util.Date;
  */
 public class StatusMessage implements Listable<StatusMessage> {
 
+    @DatabaseField(id = true)
     private String id;
+    @DatabaseField
     private String type;
+    @DatabaseField
     private String message;
+    @DatabaseField
     private String userName;
+    @DatabaseField(index = true)
     private Date updatedTime;
+    @DatabaseField
     private int commentsCount;
 
+    @DatabaseField
     private String userID;
-    private final Date createdTime;
+    @DatabaseField
+    private Date createdTime;
 
-    private URL picture;
-    private URL link;
+    @DatabaseField
+    private String picture;
+    @DatabaseField
+    private String link;
+    @DatabaseField
     private String linkName;
 
     public static Builder<?> builder(String id, String type) {
