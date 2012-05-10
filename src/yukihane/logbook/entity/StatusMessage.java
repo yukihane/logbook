@@ -1,7 +1,5 @@
 package yukihane.logbook.entity;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 
 /**
@@ -41,11 +39,11 @@ public class StatusMessage implements Listable<StatusMessage> {
         return message;
     }
 
-    public URL getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public URL getLink() {
+    public String getLink() {
         return link;
     }
 
@@ -100,8 +98,8 @@ public class StatusMessage implements Listable<StatusMessage> {
         private String userID;
         private Date createdTime;
 
-        private URL picture;
-        private URL link;
+        private String picture;
+        private String link;
         private String linkName;
 
         protected abstract T self();
@@ -146,20 +144,12 @@ public class StatusMessage implements Listable<StatusMessage> {
         }
 
         public T picture(String picture) {
-            try {
-                this.picture = (picture != null && picture.length() > 0) ? new URL(picture) : null;
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException("illegal picture url: " + picture + ",id:" + id + ",type:" + type, e);
-            }
+            this.picture = (picture != null && picture.length() > 0) ? picture : null;
             return self();
         }
 
         public T link(String link) {
-            try {
-                this.link = (link != null && link.length() > 0) ? new URL(link) : null;
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException("illegal link url: " + picture + ",id:" + id + ",type:" + type, e);
-            }
+            this.link = (link != null && link.length() > 0) ? link : null;
             return self();
         }
 
