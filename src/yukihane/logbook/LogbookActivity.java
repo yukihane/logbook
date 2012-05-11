@@ -7,8 +7,8 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.entity.Item;
 import yukihane.logbook.entity.Page;
+import yukihane.logbook.entity.StatusMessage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +18,7 @@ import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
 import com.facebook.android.SessionEvents.LogoutListener;
 
-public class LogbookActivity extends FacebookListActivity {
+public class LogbookActivity extends FacebookListActivity<StatusMessage> {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
 
     /** Called when the activity is first created. */
@@ -58,7 +58,7 @@ public class LogbookActivity extends FacebookListActivity {
     }
 
     @Override
-    protected void onListItemClicked(Item item) {
+    protected void onListItemClicked(StatusMessage item) {
         final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
         intent.putExtra("id", item.getID());
         startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);

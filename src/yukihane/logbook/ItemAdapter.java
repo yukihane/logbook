@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import yukihane.logbook.entity.Item;
+import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.entity.Page;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,7 @@ import android.widget.TextView;
 public class ItemAdapter extends BaseAdapter {
     private final Context context;
     private final ReachLastItemListener listner;
-    private final List<Item> items = new ArrayList<Item>();
+    private final List<StatusMessage> items = new ArrayList<StatusMessage>();
     private Bundle nextParam;
     private boolean fired = false;
 
@@ -44,9 +44,9 @@ public class ItemAdapter extends BaseAdapter {
         fired = false;
         nextParam = feed2.getNextParam();
         items.addAll(feed2.getItems());
-        Collections.sort(items, new Comparator<Item>() {
+        Collections.sort(items, new Comparator<StatusMessage>() {
             @Override
-            public int compare(Item lhs, Item rhs) {
+            public int compare(StatusMessage lhs, StatusMessage rhs) {
                 return -1 * lhs.compareTo(rhs);
             }
         });
@@ -84,7 +84,7 @@ public class ItemAdapter extends BaseAdapter {
             v = inflater.inflate(R.layout.item_display, null);
         }
 
-        final Item item = (Item) getItem(position);
+        final StatusMessage item = (StatusMessage) getItem(position);
         if (item != null) {
             final TextView header = (TextView) v.findViewById(R.id.rowheader);
             header.setText(item.getHeader());

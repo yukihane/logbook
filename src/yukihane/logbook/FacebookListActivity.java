@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
-import yukihane.logbook.entity.Item;
+import yukihane.logbook.entity.Listable;
 import yukihane.logbook.entity.Page;
 import android.app.Activity;
 import android.content.Intent;
@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
 
-public abstract class FacebookListActivity extends Activity {
+public abstract class FacebookListActivity<T extends Listable<T>> extends Activity {
     protected final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
     private static final int RESULT_CODE_AUTHORIZE_ACTIVITY = 0;
@@ -51,7 +51,7 @@ public abstract class FacebookListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ListView lv = (ListView) parent;
-                final Item we = (Item) lv.getItemAtPosition(position);
+                final T we = (T) lv.getItemAtPosition(position);
                 onListItemClicked(we);
             }
         });
@@ -66,14 +66,14 @@ public abstract class FacebookListActivity extends Activity {
         }
     }
 
-    protected abstract void onListItemClicked(Item item);
+    protected abstract void onListItemClicked(T item);
 
     protected abstract void onLoginValidated();
 
     protected abstract Page createPage(JSONObject obj) throws JSONException, ParseException;
 
     protected abstract String getGraphPath();
-    
+
     protected abstract String getPostGraphPath();
 
     @Override

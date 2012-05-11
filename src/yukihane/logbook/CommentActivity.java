@@ -5,12 +5,12 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import yukihane.logbook.entity.Comment;
 import yukihane.logbook.entity.CommentsPage;
-import yukihane.logbook.entity.Item;
 import yukihane.logbook.entity.Page;
 import android.os.Bundle;
 
-public class CommentActivity extends FacebookListActivity {
+public class CommentActivity extends FacebookListActivity<Comment> {
     private String threadID;
 
     /** Called when the activity is first created. */
@@ -22,7 +22,7 @@ public class CommentActivity extends FacebookListActivity {
     }
 
     @Override
-    protected void onListItemClicked(Item item) {
+    protected void onListItemClicked(Comment item) {
         return;
     }
 

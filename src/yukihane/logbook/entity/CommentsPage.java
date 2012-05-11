@@ -10,21 +10,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.entity.Item.Builder;
+import yukihane.logbook.entity.StatusMessage.Builder;
 
 public class CommentsPage extends Page {
 
-    private CommentsPage(List<Item> items) {
+    private CommentsPage(List<StatusMessage> items) {
         super(items, null);
     }
 
     public static Page fromJSONObject(JSONObject obj) throws JSONException, ParseException {
         final JSONObject commentsObj = obj.getJSONObject("comments");
         final JSONArray data = commentsObj.optJSONArray("data");
-        final List<Item> it;
+        final List<StatusMessage> it;
         if (data != null) {
             final int length = data.length();
-            it = new ArrayList<Item>(length);
+            it = new ArrayList<StatusMessage>(length);
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
             for (int i = 0; i < length; i++) {
                 final JSONObject m = data.getJSONObject(i);
@@ -38,12 +38,12 @@ public class CommentsPage extends Page {
                 final String userName = fromObj.getString("name");
                 final String userID = fromObj.getString("id");
 
-                final Item item = Item.builder(id, "comment").message(message).userID(userID).userName(userName)
+                final StatusMessage item = StatusMessage.builder(id, "comment").message(message).userID(userID).userName(userName)
                         .createdTime(createdTime).updatedTime(updatedTime).commentCount(0).build();
                 it.add(item);
             }
         } else {
-            it = new ArrayList<Item>(0);
+            it = new ArrayList<StatusMessage>(0);
         }
 
         return new Page(it, null);

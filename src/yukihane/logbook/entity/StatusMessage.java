@@ -9,7 +9,7 @@ import java.util.Date;
  * @author yuki
  *
  */
-public class Item implements Comparable<Item> {
+public class StatusMessage implements Listable<StatusMessage> {
 
     private String id;
     private String type;
@@ -68,13 +68,13 @@ public class Item implements Comparable<Item> {
     }
 
     @Override
-    public int compareTo(Item another) {
+    public int compareTo(StatusMessage another) {
         final Date me = (updatedTime != null) ? updatedTime : createdTime;
         final Date you = (another.updatedTime != null) ? another.updatedTime : another.createdTime;
         return me.getTime() == you.getTime() ? 0 : me.getTime() > you.getTime() ? 1 : -1;
     }
 
-    protected Item(Builder<?> b) {
+    protected StatusMessage(Builder<?> b) {
         this.id = b.id;
         this.type = b.type;
         this.message = b.message;
@@ -111,8 +111,8 @@ public class Item implements Comparable<Item> {
             this.type = type;
         }
 
-        public Item build() {
-            return new Item(this);
+        public StatusMessage build() {
+            return new StatusMessage(this);
         }
 
         public T message(String message) {
