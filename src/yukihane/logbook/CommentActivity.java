@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import yukihane.logbook.entity.Comment;
 import yukihane.logbook.structure.CommentsPage;
-import yukihane.logbook.structure.Page;
+import yukihane.logbook.structure.FeedPage;
 import android.os.Bundle;
 
 public class CommentActivity extends FacebookListActivity<Comment> {
@@ -34,7 +34,7 @@ public class CommentActivity extends FacebookListActivity<Comment> {
     }
 
     @Override
-    protected Page createPage(JSONObject obj) throws JSONException, ParseException {
+    protected FeedPage createPage(JSONObject obj) throws JSONException, ParseException {
         return CommentsPage.fromJSONObject(obj);
     }
 

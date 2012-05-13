@@ -17,16 +17,16 @@ import yukihane.logbook.entity.StatusMessage.Builder;
 import android.os.Bundle;
 import android.util.Log;
 
-public class Page {
+public class FeedPage {
     private final List<StatusMessage> items;
     private Bundle nextParam;
 
-    protected Page(List<StatusMessage> items, Bundle nextParam) {
+    protected FeedPage(List<StatusMessage> items, Bundle nextParam) {
         this.items = items;
         this.nextParam = nextParam;
     }
 
-    public static Page fromJSONObject(JSONObject obj) throws JSONException, ParseException {
+    public static FeedPage fromJSONObject(JSONObject obj) throws JSONException, ParseException {
         final JSONArray data = obj.getJSONArray("data");
         final int length = data.length();
         final List<StatusMessage> it = new ArrayList<StatusMessage>(length);
@@ -63,10 +63,10 @@ public class Page {
             final String nextURL = paging.getString("next");
             Bundle bundle = getParameter(nextURL);
             Log.v(TAG, "NEXT URL:" + nextURL);
-            return new Page(it, bundle);
+            return new FeedPage(it, bundle);
         } else {
             Log.v(TAG, "NO NEXT PAGE");
-            return new Page(it, null);
+            return new FeedPage(it, null);
         }
     }
 

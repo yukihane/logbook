@@ -10,7 +10,7 @@ import java.util.List;
 
 
 import yukihane.logbook.entity.StatusMessage;
-import yukihane.logbook.structure.Page;
+import yukihane.logbook.structure.FeedPage;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,7 +38,7 @@ public class ItemAdapter extends BaseAdapter {
         this.listner = listener;
     }
 
-    public void addPage(Page feed2) {
+    public void addPage(FeedPage feed2) {
         Log.i(TAG,
                 "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:"
                         + feed2.getNextParam());

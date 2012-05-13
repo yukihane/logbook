@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
 import yukihane.logbook.entity.Listable;
-import yukihane.logbook.structure.Page;
+import yukihane.logbook.structure.FeedPage;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,7 +71,7 @@ public abstract class FacebookListActivity<T extends Listable<T>> extends Activi
 
     protected abstract void onLoginValidated();
 
-    protected abstract Page createPage(JSONObject obj) throws JSONException, ParseException;
+    protected abstract FeedPage createPage(JSONObject obj) throws JSONException, ParseException;
 
     protected abstract String getGraphPath();
 
@@ -106,7 +106,7 @@ public abstract class FacebookListActivity<T extends Listable<T>> extends Activi
                     public void run() {
                         try {
 
-                            final Page page = createPage(res);
+                            final FeedPage page = createPage(res);
                             adapter.addPage(page);
                         } catch (JSONException e) {
                             Log.e(TAG, "", e);

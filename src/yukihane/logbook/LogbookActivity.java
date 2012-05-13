@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 
 import yukihane.logbook.entity.StatusMessage;
-import yukihane.logbook.structure.Page;
+import yukihane.logbook.structure.FeedPage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,8 +66,8 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage> {
     }
 
     @Override
-    protected Page createPage(JSONObject obj) throws JSONException, ParseException {
-        return Page.fromJSONObject(obj);
+    protected FeedPage createPage(JSONObject obj) throws JSONException, ParseException {
+        return FeedPage.fromJSONObject(obj);
     }
 
     @Override

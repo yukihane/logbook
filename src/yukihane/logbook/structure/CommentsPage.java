@@ -12,13 +12,13 @@ import org.json.JSONObject;
 
 import yukihane.logbook.entity.StatusMessage;
 
-public class CommentsPage extends Page {
+public class CommentsPage extends FeedPage {
 
     private CommentsPage(List<StatusMessage> items) {
         super(items, null);
     }
 
-    public static Page fromJSONObject(JSONObject obj) throws JSONException, ParseException {
+    public static FeedPage fromJSONObject(JSONObject obj) throws JSONException, ParseException {
         final JSONObject commentsObj = obj.getJSONObject("comments");
         final JSONArray data = commentsObj.optJSONArray("data");
         final List<StatusMessage> it;
@@ -46,6 +46,6 @@ public class CommentsPage extends Page {
             it = new ArrayList<StatusMessage>(0);
         }
 
-        return new Page(it, null);
+        return new FeedPage(it, null);
     }
 }
