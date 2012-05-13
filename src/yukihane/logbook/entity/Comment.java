@@ -15,8 +15,6 @@ public class Comment implements Listable<Comment> {
     private String type;
     private String message;
     private String userName;
-    private Date updatedTime;
-    private int commentsCount;
 
     private String userID;
     private final Date createdTime;
@@ -54,7 +52,7 @@ public class Comment implements Listable<Comment> {
     }
 
     public String getHeader() {
-        return "" + userName + "  " + updatedTime + "(" + commentsCount + ")" + " " + type;
+        return "" + userName + "  " + createdTime + " " + type;
     }
 
     public String getBody() {
@@ -63,14 +61,14 @@ public class Comment implements Listable<Comment> {
 
     @Override
     public String toString() {
-        return "(" + commentsCount + ")" + "id:" + id + ", type:" + type + ", \nmessage:" + message + ", \nuser name: "
-                + userName + ", update time: " + updatedTime;
+        return "id:" + id + ", type:" + type + ", \nmessage:" + message + ", \nuser name: " + userName
+                + ", create time: " + createdTime;
     }
 
     @Override
     public int compareTo(Comment another) {
-        final Date me = (updatedTime != null) ? updatedTime : createdTime;
-        final Date you = (another.updatedTime != null) ? another.updatedTime : another.createdTime;
+        final Date me = createdTime;
+        final Date you = another.createdTime;
         return me.getTime() == you.getTime() ? 0 : me.getTime() > you.getTime() ? 1 : -1;
     }
 
@@ -81,8 +79,6 @@ public class Comment implements Listable<Comment> {
         this.userID = b.userID;
         this.userName = b.userName;
         this.createdTime = b.createdTime;
-        this.updatedTime = b.updatedTime;
-        this.commentsCount = b.commentsCount;
 
         this.picture = b.picture;
         this.link = b.link;
@@ -94,8 +90,6 @@ public class Comment implements Listable<Comment> {
         private final String type;
         private String message;
         private String userName;
-        private Date updatedTime;
-        private int commentsCount;
 
         private String userID;
         private Date createdTime;
@@ -132,16 +126,6 @@ public class Comment implements Listable<Comment> {
 
         public T createdTime(Date createdTime) {
             this.createdTime = createdTime;
-            return self();
-        }
-
-        public T updatedTime(Date updatedTime) {
-            this.updatedTime = updatedTime;
-            return self();
-        }
-
-        public T commentCount(int commentCount) {
-            this.commentsCount = commentCount;
             return self();
         }
 
