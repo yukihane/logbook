@@ -8,8 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
-import yukihane.logbook.entity.Item;
-import yukihane.logbook.entity.Page;
+import yukihane.logbook.entity.Listable;
+import yukihane.logbook.structure.Page;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,15 +25,15 @@ import android.widget.TextView;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
 
-public abstract class FacebookListActivity extends Activity {
-    protected final ItemAdapter adapter = new ItemAdapter(this, new RequestNextPage());
-    private final MeRequestListener pageLiquestListener = new MeRequestListener();
+public abstract class FacebookListActivity<E extends Listable<E>, P extends Page<E>> extends Activity {
     private static final int RESULT_CODE_AUTHORIZE_ACTIVITY = 0;
     private static final int RESULT_CODE_POST_ACTIVITY = 1;
 
     private static final int MENU_GROUP_LOGIN_LOGOUT = 1;
 
     private static final int MENU_POST = 2;
+
+    private final MeRequestListener pageLiquestListener = new MeRequestListener();
 
     /** Called when the activity is first created. */
     @Override
@@ -45,13 +45,13 @@ public abstract class FacebookListActivity extends Activity {
         final TextView footer = new TextView(list.getContext());
         footer.setText("here is footer");
         list.addFooterView(footer);
-        list.setAdapter(adapter);
+        list.setAdapter(getItemAdapter());
 
         list.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ListView lv = (ListView) parent;
-                final Item we = (Item) lv.getItemAtPosition(position);
+                final E we = (E) lv.getItemAtPosition(position);
                 onListItemClicked(we);
             }
         });
@@ -66,14 +66,16 @@ public abstract class FacebookListActivity extends Activity {
         }
     }
 
-    protected abstract void onListItemClicked(Item item);
+    protected abstract ItemAdapter<E, P> getItemAdapter();
+
+    protected abstract void onListItemClicked(E item);
 
     protected abstract void onLoginValidated();
 
-    protected abstract Page createPage(JSONObject obj) throws JSONException, ParseException;
+    protected abstract P createPage(JSONObject obj) throws JSONException, ParseException;
 
     protected abstract String getGraphPath();
-    
+
     protected abstract String getPostGraphPath();
 
     @Override
@@ -105,8 +107,8 @@ public abstract class FacebookListActivity extends Activity {
                     public void run() {
                         try {
 
-                            final Page page = createPage(res);
-                            adapter.addPage(page);
+                            final P page = createPage(res);
+                            getItemAdapter().addPage(page);
                         } catch (JSONException e) {
                             Log.e(TAG, "", e);
                         } catch (ParseException e) {
@@ -124,7 +126,7 @@ public abstract class FacebookListActivity extends Activity {
         }
     }
 
-    private final class RequestNextPage implements ReachLastItemListener {
+    protected final class RequestNextPage implements ReachLastItemListener {
 
         @Override
         public void fire(Bundle nextParam) {

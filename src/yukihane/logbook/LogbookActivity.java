@@ -7,8 +7,8 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.entity.Item;
-import yukihane.logbook.entity.Page;
+import yukihane.logbook.entity.StatusMessage;
+import yukihane.logbook.structure.FeedPage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,8 +18,9 @@ import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
 import com.facebook.android.SessionEvents.LogoutListener;
 
-public class LogbookActivity extends FacebookListActivity {
+public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPage> {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
+    private final StatusMessageAdapter adapter = new StatusMessageAdapter(this, new RequestNextPage());
 
     /** Called when the activity is first created. */
     @Override
@@ -51,22 +52,22 @@ public class LogbookActivity extends FacebookListActivity {
 
     @Override
     protected void onLoginValidated() {
-        adapter.clear();
+        getItemAdapter().clear();
         final Bundle b = new Bundle();
         b.putString("limit", "100");
         requestPage(b);
     }
 
     @Override
-    protected void onListItemClicked(Item item) {
+    protected void onListItemClicked(StatusMessage item) {
         final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
         intent.putExtra("id", item.getID());
         startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
     }
 
     @Override
-    protected Page createPage(JSONObject obj) throws JSONException, ParseException {
-        return Page.fromJSONObject(obj);
+    protected FeedPage createPage(JSONObject obj) throws JSONException, ParseException {
+        return FeedPage.fromJSONObject(obj);
     }
 
     @Override
@@ -77,6 +78,11 @@ public class LogbookActivity extends FacebookListActivity {
     @Override
     protected String getPostGraphPath() {
         return getGraphPath();
+    }
+
+    @Override
+    protected ItemAdapter<StatusMessage, FeedPage> getItemAdapter() {
+        return adapter;
     }
 
     private class FbAPIsAuthListener implements AuthListener {

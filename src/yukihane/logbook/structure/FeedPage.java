@@ -1,4 +1,4 @@
-package yukihane.logbook.entity;
+package yukihane.logbook.structure;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
@@ -12,23 +12,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.entity.Item.Builder;
+import yukihane.logbook.entity.StatusMessage;
 import android.os.Bundle;
 import android.util.Log;
 
-public class Page {
-    private final List<Item> items;
+public class FeedPage implements Page<StatusMessage> {
+    private final List<StatusMessage> items;
     private Bundle nextParam;
 
-    protected Page(List<Item> items, Bundle nextParam) {
+    protected FeedPage(List<StatusMessage> items, Bundle nextParam) {
         this.items = items;
         this.nextParam = nextParam;
     }
 
-    public static Page fromJSONObject(JSONObject obj) throws JSONException, ParseException {
+    public static FeedPage fromJSONObject(JSONObject obj) throws JSONException, ParseException {
         final JSONArray data = obj.getJSONArray("data");
         final int length = data.length();
-        final List<Item> it = new ArrayList<Item>(length);
+        final List<StatusMessage> it = new ArrayList<StatusMessage>(length);
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         for (int i = 0; i < length; i++) {
             final JSONObject m = data.getJSONObject(i);
@@ -51,9 +51,9 @@ public class Page {
             final String link = m.optString("link");
             final String linkName = m.optString("name");
 
-            final Item item = Item.builder(id, type).message(message).userID(userID).userName(userName)
-                    .createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount).picture(picture)
-                    .link(link).linkName(linkName).build();
+            final StatusMessage item = StatusMessage.builder(id, type).message(message).userID(userID)
+                    .userName(userName).createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount)
+                    .picture(picture).link(link).linkName(linkName).build();
             it.add(item);
         }
 
@@ -62,14 +62,14 @@ public class Page {
             final String nextURL = paging.getString("next");
             Bundle bundle = getParameter(nextURL);
             Log.v(TAG, "NEXT URL:" + nextURL);
-            return new Page(it, bundle);
+            return new FeedPage(it, bundle);
         } else {
             Log.v(TAG, "NO NEXT PAGE");
-            return new Page(it, null);
+            return new FeedPage(it, null);
         }
     }
 
-    public static Bundle getParameter(String url) {
+    private static Bundle getParameter(String url) {
         final String[] text = url.replaceAll("^.*?\\?", "").split("&");
         final Bundle b = new Bundle();
         for (String p : text) {
@@ -79,7 +79,7 @@ public class Page {
         return b;
     }
 
-    public List<Item> getItems() {
+    public List<StatusMessage> getItems() {
         return items;
     }
 
