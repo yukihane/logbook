@@ -7,7 +7,6 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.FeedPage;
 import android.content.Intent;
@@ -19,7 +18,7 @@ import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
 import com.facebook.android.SessionEvents.LogoutListener;
 
-public class LogbookActivity extends FacebookListActivity<StatusMessage> {
+public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPage> {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
 
     /** Called when the activity is first created. */
@@ -52,7 +51,7 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage> {
 
     @Override
     protected void onLoginValidated() {
-        adapter.clear();
+        getItemAdapter().clear();
         final Bundle b = new Bundle();
         b.putString("limit", "100");
         requestPage(b);

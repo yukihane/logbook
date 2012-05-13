@@ -13,11 +13,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.entity.StatusMessage;
-import yukihane.logbook.entity.StatusMessage.Builder;
 import android.os.Bundle;
 import android.util.Log;
 
-public class FeedPage {
+public class FeedPage implements Page<StatusMessage> {
     private final List<StatusMessage> items;
     private Bundle nextParam;
 
@@ -52,9 +51,9 @@ public class FeedPage {
             final String link = m.optString("link");
             final String linkName = m.optString("name");
 
-            final StatusMessage item = StatusMessage.builder(id, type).message(message).userID(userID).userName(userName)
-                    .createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount).picture(picture)
-                    .link(link).linkName(linkName).build();
+            final StatusMessage item = StatusMessage.builder(id, type).message(message).userID(userID)
+                    .userName(userName).createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount)
+                    .picture(picture).link(link).linkName(linkName).build();
             it.add(item);
         }
 
@@ -70,7 +69,7 @@ public class FeedPage {
         }
     }
 
-    public static Bundle getParameter(String url) {
+    private static Bundle getParameter(String url) {
         final String[] text = url.replaceAll("^.*?\\?", "").split("&");
         final Bundle b = new Bundle();
         for (String p : text) {

@@ -5,13 +5,12 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import yukihane.logbook.entity.Comment;
 import yukihane.logbook.structure.CommentsPage;
-import yukihane.logbook.structure.FeedPage;
 import android.os.Bundle;
 
-public class CommentActivity extends FacebookListActivity<Comment> {
+public class CommentActivity extends FacebookListActivity<Comment, CommentsPage> {
+
     private String threadID;
 
     /** Called when the activity is first created. */
@@ -29,12 +28,12 @@ public class CommentActivity extends FacebookListActivity<Comment> {
 
     @Override
     protected void onLoginValidated() {
-        adapter.clear();
+        getItemAdapter().clear();
         requestPage();
     }
 
     @Override
-    protected FeedPage createPage(JSONObject obj) throws JSONException, ParseException {
+    protected CommentsPage createPage(JSONObject obj) throws JSONException, ParseException {
         return CommentsPage.fromJSONObject(obj);
     }
 

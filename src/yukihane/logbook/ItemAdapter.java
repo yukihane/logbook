@@ -2,34 +2,26 @@ package yukihane.logbook;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
-import yukihane.logbook.entity.StatusMessage;
-import yukihane.logbook.structure.FeedPage;
+import yukihane.logbook.entity.Listable;
+import yukihane.logbook.structure.Page;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ItemAdapter extends BaseAdapter {
+public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
     private final Context context;
     private final ReachLastItemListener listner;
-    private final List<StatusMessage> items = new ArrayList<StatusMessage>();
+    private final List<E> items = new ArrayList<E>();
     private Bundle nextParam;
     private boolean fired = false;
 
@@ -38,16 +30,16 @@ public class ItemAdapter extends BaseAdapter {
         this.listner = listener;
     }
 
-    public void addPage(FeedPage feed2) {
+    public void addPage(P feed2) {
         Log.i(TAG,
                 "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:"
                         + feed2.getNextParam());
         fired = false;
         nextParam = feed2.getNextParam();
         items.addAll(feed2.getItems());
-        Collections.sort(items, new Comparator<StatusMessage>() {
+        Collections.sort(items, new Comparator<E>() {
             @Override
-            public int compare(StatusMessage lhs, StatusMessage rhs) {
+            public int compare(E lhs, E rhs) {
                 return -1 * lhs.compareTo(rhs);
             }
         });
@@ -85,54 +77,12 @@ public class ItemAdapter extends BaseAdapter {
             v = inflater.inflate(R.layout.item_display, null);
         }
 
-        final StatusMessage item = (StatusMessage) getItem(position);
+        final E item = (E) getItem(position);
         if (item != null) {
             final TextView header = (TextView) v.findViewById(R.id.rowheader);
             header.setText(item.getHeader());
             final TextView textView = (TextView) v.findViewById(R.id.rowitem);
             textView.setText(item.getBody());
-
-            final URL picture = item.getPicture();
-            final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
-
-            iv.setImageBitmap(null);
-            if (picture != null) {
-                new DownloadImageTask(iv).execute(picture.toString());
-            }
-
-            final String linkName = item.getLinkName();
-            final TextView linkTV = (TextView) v.findViewById(R.id.rowlinkname);
-            if (linkName != null) {
-                linkTV.setText(linkName);
-            } else {
-                linkTV.setText("");
-            }
-
-            final URL link = item.getLink();
-            if (link != null) {
-                final OnClickListener listener = new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        final Uri uri = Uri.parse(link.toString());
-                        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        v.getContext().startActivity(intent);
-                    }
-                };
-
-                if (picture != null) {
-                    iv.setOnClickListener(listener);
-                }
-
-                if (linkName == null) {
-                    linkTV.setTag("link");
-                }
-                linkTV.setOnClickListener(listener);
-            } else {
-                iv.setOnClickListener(null);
-                linkTV.setOnClickListener(null);
-            }
-
         }
 
         if (!fired && position >= getCount() - 1) {
@@ -147,25 +97,5 @@ public class ItemAdapter extends BaseAdapter {
     public interface ReachLastItemListener {
 
         void fire(Bundle nextParam);
-    }
-
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        private final ImageView iv;
-
-        private DownloadImageTask(ImageView iv) {
-            super();
-            this.iv = iv;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            return LogbookApplication.getBitmap(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            iv.setImageBitmap(result);
-        }
     }
 }
