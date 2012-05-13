@@ -8,8 +8,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+
 import yukihane.logbook.entity.StatusMessage;
-import yukihane.logbook.entity.Page;
+import yukihane.logbook.structure.Page;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;

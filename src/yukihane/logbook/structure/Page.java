@@ -1,4 +1,4 @@
-package yukihane.logbook.entity;
+package yukihane.logbook.structure;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.entity.StatusMessage.Builder;
 import android.os.Bundle;
 import android.util.Log;

@@ -5,9 +5,10 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import yukihane.logbook.entity.Comment;
-import yukihane.logbook.entity.CommentsPage;
-import yukihane.logbook.entity.Page;
+import yukihane.logbook.structure.CommentsPage;
+import yukihane.logbook.structure.Page;
 import android.os.Bundle;
 
 public class CommentActivity extends FacebookListActivity<Comment> {

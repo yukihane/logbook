@@ -1,4 +1,4 @@
-package yukihane.logbook.entity;
+package yukihane.logbook.structure;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.entity.StatusMessage.Builder;
+import yukihane.logbook.entity.StatusMessage;
 
 public class CommentsPage extends Page {
 

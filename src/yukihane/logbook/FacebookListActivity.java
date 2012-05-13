@@ -7,9 +7,10 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
 import yukihane.logbook.entity.Listable;
-import yukihane.logbook.entity.Page;
+import yukihane.logbook.structure.Page;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

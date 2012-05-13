@@ -7,8 +7,9 @@ import java.text.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import yukihane.logbook.entity.Page;
+
 import yukihane.logbook.entity.StatusMessage;
+import yukihane.logbook.structure.Page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
