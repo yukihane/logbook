@@ -20,6 +20,7 @@ import com.facebook.android.SessionEvents.LogoutListener;
 
 public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPage> {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
+    private final StatusMessageAdapter adapter = new StatusMessageAdapter(this, new RequestNextPage());
 
     /** Called when the activity is first created. */
     @Override
@@ -77,6 +78,11 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
     @Override
     protected String getPostGraphPath() {
         return getGraphPath();
+    }
+
+    @Override
+    protected ItemAdapter<StatusMessage, FeedPage> getItemAdapter() {
+        return adapter;
     }
 
     private class FbAPIsAuthListener implements AuthListener {

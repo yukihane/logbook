@@ -33,7 +33,6 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
 
     private static final int MENU_POST = 2;
 
-    private final ItemAdapter<E, P> adapter = new ItemAdapter<E, P>(this, new RequestNextPage());
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
 
     /** Called when the activity is first created. */
@@ -67,9 +66,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         }
     }
 
-    protected final ItemAdapter<E, P> getItemAdapter() {
-        return adapter;
-    }
+    protected abstract ItemAdapter<E, P> getItemAdapter();
 
     protected abstract void onListItemClicked(E item);
 
@@ -129,7 +126,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         }
     }
 
-    private final class RequestNextPage implements ReachLastItemListener {
+    protected final class RequestNextPage implements ReachLastItemListener {
 
         @Override
         public void fire(Bundle nextParam) {

@@ -11,6 +11,8 @@ import android.os.Bundle;
 
 public class CommentActivity extends FacebookListActivity<Comment, CommentsPage> {
 
+    private final ItemAdapter<Comment, CommentsPage> adapter = new ItemAdapter<Comment, CommentsPage>(this,
+            new RequestNextPage());
     private String threadID;
 
     /** Called when the activity is first created. */
@@ -45,5 +47,10 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     @Override
     protected String getPostGraphPath() {
         return threadID + "/comments";
+    }
+
+    @Override
+    protected ItemAdapter<Comment, CommentsPage> getItemAdapter() {
+        return adapter;
     }
 }
