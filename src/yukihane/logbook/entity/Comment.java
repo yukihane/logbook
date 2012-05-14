@@ -76,6 +76,23 @@ public class Comment implements Listable<Comment> {
         return me.getTime() == you.getTime() ? 0 : me.getTime() > you.getTime() ? 1 : -1;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Comment)) {
+            return false;
+        }
+        final Comment other = (Comment) o;
+        return id == other.id;
+    }
+
+    @Override
+    public int hashCode() {
+        if (id == null) {
+            return 0;
+        }
+        return id.intern().hashCode();
+    }
+
     protected Comment(Builder<?> b) {
         this.id = b.id;
         this.message = b.message;

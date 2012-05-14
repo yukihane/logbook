@@ -85,6 +85,23 @@ public class StatusMessage implements Listable<StatusMessage> {
         return me.getTime() == you.getTime() ? 0 : me.getTime() > you.getTime() ? 1 : -1;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof StatusMessage)) {
+            return false;
+        }
+        final StatusMessage other = (StatusMessage) o;
+        return id == other.id;
+    }
+
+    @Override
+    public int hashCode() {
+        if (id == null) {
+            return 0;
+        }
+        return id.intern().hashCode();
+    }
+
     protected StatusMessage(Builder<?> b) {
         this.id = b.id;
         this.type = b.type;
