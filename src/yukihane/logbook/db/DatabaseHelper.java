@@ -27,7 +27,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // the DAO object we use to access the Item table
-    private Dao<StatusMessage, String> simpleDao = null;
+    private Dao<StatusMessage, String> statusMessageDao = null;
     private Dao<Comment, String> commentDao = null;
 
     public DatabaseHelper(Context context) {
@@ -43,6 +43,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(TAG, "onCreate");
             TableUtils.createTable(connectionSource, StatusMessage.class);
+            TableUtils.createTable(connectionSource, Comment.class);
         } catch (SQLException e) {
             Log.e(TAG, "Can't create database", e);
             throw new RuntimeException(e);
@@ -58,6 +59,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(TAG, "onUpgrade");
             TableUtils.dropTable(connectionSource, StatusMessage.class, true);
+            TableUtils.dropTable(connectionSource, Comment.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(db, connectionSource);
         } catch (SQLException e) {
@@ -70,11 +72,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * Returns the Database Access Object (DAO) for our Item class. It will create it or just give the cached
      * value.
      */
-    public Dao<StatusMessage, String> getItemDao() throws SQLException {
-        if (simpleDao == null) {
-            simpleDao = getDao(StatusMessage.class);
+    public Dao<StatusMessage, String> getStatusMessageDao() throws SQLException {
+        if (statusMessageDao == null) {
+            statusMessageDao = getDao(StatusMessage.class);
         }
-        return simpleDao;
+        return statusMessageDao;
     }
 
     public Dao<Comment, String> getCommentDao() throws SQLException {
@@ -90,6 +92,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
-        simpleDao = null;
+        statusMessageDao = null;
+        commentDao = null;
     }
 }

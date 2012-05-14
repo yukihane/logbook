@@ -89,7 +89,7 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
 
     @Override
     protected Dao<StatusMessage, String> getDao() throws SQLException {
-        return getHelper().getItemDao();
+        return getHelper().getStatusMessageDao();
     }
 
     private class FbAPIsAuthListener implements AuthListener {
