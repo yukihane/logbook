@@ -53,15 +53,16 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         final TextView footer = new TextView(list.getContext());
         footer.setText("here is footer");
         list.addFooterView(footer);
-        
+
         final ItemAdapter<E, P> adapter = getItemAdapter();
         try {
             final List<E> items = getPersistedItems();
+            Log.i(TAG, "DB load : " + items.size());
             adapter.addItems(items);
         } catch (SQLException e) {
-            Log.e(TAG,"cannot load items", e);
+            Log.e(TAG, "cannot load items", e);
         }
-        
+
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new OnItemClickListener() {
