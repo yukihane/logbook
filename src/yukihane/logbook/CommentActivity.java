@@ -2,6 +2,7 @@ package yukihane.logbook;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -65,7 +66,7 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
 
     @Override
     protected List<Comment> getPersistedItems() throws SQLException {
-        // TODO
-        return null;
+        // TODO DBからエンティティを取得
+        return new ArrayList<Comment>(0);
     }
 }
