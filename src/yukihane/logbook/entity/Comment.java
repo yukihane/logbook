@@ -31,8 +31,8 @@ public class Comment implements Listable<Comment> {
     @DatabaseField
     private String linkName;
 
-    public static Builder<?> builder(String id, String type) {
-        return new Builder2(id, type);
+    public static Builder<?> builder(String id) {
+        return new Builder2(id);
     }
 
     public String getID() {
@@ -148,7 +148,7 @@ public class Comment implements Listable<Comment> {
 
     private static final class Builder2 extends Builder<Builder2> {
 
-        public Builder2(String id, String type) {
+        public Builder2(String id) {
             super(id);
         }
 

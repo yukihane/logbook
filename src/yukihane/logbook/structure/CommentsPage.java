@@ -42,7 +42,7 @@ public class CommentsPage implements Page<Comment> {
                 final String userName = fromObj.getString("name");
                 final String userID = fromObj.getString("id");
 
-                final Comment item = Comment.builder(id, "comment").message(message).userID(userID).userName(userName)
+                final Comment item = Comment.builder(id).message(message).userID(userID).userName(userName)
                         .createdTime(createdTime).build();
                 it.add(item);
             }
