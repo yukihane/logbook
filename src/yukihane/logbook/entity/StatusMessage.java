@@ -40,6 +40,9 @@ public class StatusMessage implements Listable<StatusMessage> {
         return new Builder2(id, type);
     }
 
+    private StatusMessage() {
+    }
+
     public String getID() {
         return id;
     }

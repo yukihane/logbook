@@ -22,7 +22,7 @@ public class Comment implements Listable<Comment> {
     @DatabaseField
     private String userID;
     @DatabaseField
-    private final Date createdTime;
+    private Date createdTime;
 
     @DatabaseField
     private String picture;
@@ -33,6 +33,9 @@ public class Comment implements Listable<Comment> {
 
     public static Builder<?> builder(String id) {
         return new Builder2(id);
+    }
+
+    private Comment() {
     }
 
     public String getID() {
