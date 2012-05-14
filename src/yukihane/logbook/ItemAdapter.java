@@ -94,7 +94,7 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         }
 
         if (!fired && position >= getCount() - 1) {
-            Log.v(TAG, "fire next page request");
+            Log.i(TAG, "fire next page request");
             listner.fire(nextParam);
             fired = true;
         }
