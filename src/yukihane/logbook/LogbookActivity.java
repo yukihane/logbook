@@ -95,8 +95,8 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
 
     @Override
     protected List<StatusMessage> getPersistedItems() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        final Dao<StatusMessage, String> dao = getHelper().getStatusMessageDao();
+        return dao.queryForAll();
     }
 
     private class FbAPIsAuthListener implements AuthListener {
