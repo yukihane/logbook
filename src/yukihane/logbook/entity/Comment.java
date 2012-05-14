@@ -14,7 +14,7 @@ public class Comment implements Listable<Comment> {
     @DatabaseField(id = true)
     private String id;
     @DatabaseField(foreign = true)
-    private String statusMessageID;
+    private StatusMessage statusMessage;
     @DatabaseField
     private String message;
     private String userName;
