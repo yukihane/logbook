@@ -4,6 +4,7 @@ import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +57,7 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
     protected void onLoginValidated() {
         getItemAdapter().clear();
         final Bundle b = new Bundle();
-        b.putString("limit", "100");
+        b.putString("limit", "200");
         requestPage(b);
     }
 
@@ -90,6 +91,12 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
     @Override
     protected Dao<StatusMessage, String> getDao() throws SQLException {
         return getHelper().getStatusMessageDao();
+    }
+
+    @Override
+    protected List<StatusMessage> getPersistedItems() throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     private class FbAPIsAuthListener implements AuthListener {

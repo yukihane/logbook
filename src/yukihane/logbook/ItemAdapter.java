@@ -3,6 +3,7 @@ package yukihane.logbook;
 import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +31,7 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         this.listner = listener;
     }
 
-    public void addPage(P feed2) {
+    public final void addPage(P feed2) {
         Log.i(TAG,
                 "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:"
                         + feed2.getNextParam());
@@ -44,6 +45,13 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
             }
         });
         notifyDataSetChanged();
+    }
+
+    public final void addItems(Collection<E> it) {
+        if (it.size() > 0) {
+            items.addAll(it);
+            notifyDataSetChanged();
+        }
     }
 
     public void clear() {

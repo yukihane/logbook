@@ -2,6 +2,7 @@ package yukihane.logbook;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,5 +61,11 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     @Override
     protected Dao<Comment, String> getDao() throws SQLException {
         return getHelper().getCommentDao();
+    }
+
+    @Override
+    protected List<Comment> getPersistedItems() throws SQLException {
+        // TODO
+        return null;
     }
 }

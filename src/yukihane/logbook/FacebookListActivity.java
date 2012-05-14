@@ -4,6 +4,7 @@ import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.json.JSONException;
@@ -52,7 +53,16 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         final TextView footer = new TextView(list.getContext());
         footer.setText("here is footer");
         list.addFooterView(footer);
-        list.setAdapter(getItemAdapter());
+        
+        final ItemAdapter<E, P> adapter = getItemAdapter();
+        try {
+            final List<E> items = getPersistedItems();
+            adapter.addItems(items);
+        } catch (SQLException e) {
+            Log.e(TAG,"cannot load items", e);
+        }
+        
+        list.setAdapter(adapter);
 
         list.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -86,6 +96,8 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
     protected abstract String getPostGraphPath();
 
     protected abstract Dao<E, String> getDao() throws SQLException;
+
+    protected abstract List<E> getPersistedItems() throws SQLException;
 
     @Override
     public void onResume() {
