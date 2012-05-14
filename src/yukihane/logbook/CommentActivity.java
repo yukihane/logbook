@@ -35,7 +35,6 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
 
     @Override
     protected void onLoginValidated() {
-        getItemAdapter().clear();
         requestPage();
     }
 

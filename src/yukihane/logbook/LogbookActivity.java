@@ -55,7 +55,6 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
 
     @Override
     protected void onLoginValidated() {
-        getItemAdapter().clear();
         final Bundle b = new Bundle();
         b.putString("limit", "200");
         requestPage(b);
