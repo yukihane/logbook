@@ -84,8 +84,13 @@ public class Comment implements Listable<Comment> {
         if (o == null || !(o instanceof Comment)) {
             return false;
         }
+
+        if (id == null) {
+            return false;
+        }
+
         final Comment other = (Comment) o;
-        return id == other.id;
+        return id.equals(other.id);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class Comment implements Listable<Comment> {
         if (id == null) {
             return 0;
         }
-        return id.intern().hashCode();
+        return id.hashCode();
     }
 
     protected Comment(Builder<?> b) {

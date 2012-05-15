@@ -93,8 +93,12 @@ public class StatusMessage implements Listable<StatusMessage> {
         if (o == null || !(o instanceof StatusMessage)) {
             return false;
         }
+        if (id == null) {
+            return false;
+        }
+
         final StatusMessage other = (StatusMessage) o;
-        return id == other.id;
+        return id.equals(other.id);
     }
 
     @Override
@@ -102,7 +106,7 @@ public class StatusMessage implements Listable<StatusMessage> {
         if (id == null) {
             return 0;
         }
-        return id.intern().hashCode();
+        return id.hashCode();
     }
 
     protected StatusMessage(Builder<?> b) {
