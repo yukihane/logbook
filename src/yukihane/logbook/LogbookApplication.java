@@ -165,7 +165,7 @@ public class LogbookApplication extends Application {
             URLConnection conn = aURL.openConnection();
             conn.connect();
             InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
+            BufferedInputStream bis = new BufferedInputStream(is, 8 * 1024);
             bm = BitmapFactory.decodeStream(new FlushedInputStream(is));
             bis.close();
             is.close();
