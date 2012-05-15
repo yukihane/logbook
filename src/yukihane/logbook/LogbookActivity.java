@@ -5,6 +5,8 @@ import static yukihane.logbook.LogbookApplication.TAG;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,8 +14,16 @@ import org.json.JSONObject;
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.FeedPage;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.android.SessionEvents;
@@ -54,6 +64,58 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
     }
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        Log.v(TAG, "onCreateContextMenu " + getClass().getSimpleName());
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        final AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
+        final ListView lv = (ListView) v;
+        final StatusMessage sm = (StatusMessage) lv.getItemAtPosition(acmi.position);
+
+        menu.setHeaderTitle("Action");
+
+        final MenuItem itemComment = menu.add(Menu.NONE, 0, 0, "COMMENT");
+        final Intent intentComment = new Intent();
+        intentComment.putExtra("id", sm.getID());
+        itemComment.setIntent(intentComment);
+
+        int num = 1;
+        if (sm.getLink() != null) {
+            final MenuItem itemLink = menu.add(Menu.NONE, 1, 1, "LINK");
+            final Intent intentLink = new Intent(Intent.ACTION_VIEW, Uri.parse(sm.getLink()));
+            itemLink.setIntent(intentLink);
+            num++;
+        }
+
+        final Pattern urlPattern = Pattern.compile("https?://[^\\s]+");
+        final Matcher urlMatcher = urlPattern.matcher(sm.getMessage());
+        while (urlMatcher.find()) {
+            final String url = urlMatcher.group();
+            Log.i(TAG, "add link to context menu: " + url);
+            final MenuItem item = menu.add(1, num, num, url);
+            item.setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            num++;
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == 0) {
+            final Intent intent = item.getIntent();
+            final String id = intent.getExtras().getString("id");
+            startCommentActivity(id);
+            return true;
+        } else if (item.getItemId() == 1) {
+            startActivity(item.getIntent());
+            return true;
+        } else if (item.getGroupId() == 1) {
+            startActivity(item.getIntent());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     protected void onLoginValidated() {
         final Bundle b = new Bundle();
         b.putString("limit", "25");
@@ -62,8 +124,12 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
 
     @Override
     protected void onListItemClicked(StatusMessage item) {
+        startCommentActivity(item.getID());
+    }
+
+    private void startCommentActivity(String id) {
         final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
-        intent.putExtra("id", item.getID());
+        intent.putExtra("id", id);
         startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
     }
 

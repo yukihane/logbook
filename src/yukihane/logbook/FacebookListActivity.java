@@ -74,6 +74,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
             }
         });
 
+        registerForContextMenu(list);
     }
 
     @Override
