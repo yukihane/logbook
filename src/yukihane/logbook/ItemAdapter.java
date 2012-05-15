@@ -41,13 +41,14 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
                         + feed2.getNextParam());
         fired = false;
         nextParam = feed2.getNextParam();
-        items.addAll(feed2.getItems());
-        notifyDataSetChanged();
+
+        addItems(feed2.getItems());
     }
 
     public final void addItems(Collection<E> it) {
-        if (it.size() > 0) {
-            items.addAll(it);
+        items.removeAll(it);
+        final boolean modified = items.addAll(it);
+        if (modified) {
             notifyDataSetChanged();
         }
     }
