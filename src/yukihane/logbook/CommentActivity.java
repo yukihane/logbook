@@ -1,5 +1,7 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.LogbookApplication.TAG;
+
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 import yukihane.logbook.entity.Comment;
 import yukihane.logbook.structure.CommentsPage;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -26,6 +29,7 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
         super.onCreate(savedInstanceState);
 
         threadID = getIntent().getStringExtra("id");
+        Log.i(TAG, "threadID: " + threadID);
     }
 
     @Override
