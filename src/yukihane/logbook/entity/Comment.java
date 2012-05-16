@@ -13,8 +13,8 @@ public class Comment implements Listable<Comment> {
 
     @DatabaseField(id = true)
     private String id;
-    @DatabaseField(foreign = true)
-    private StatusMessage statusMessage;
+    @DatabaseField
+    private String parentID;
     @DatabaseField
     private String message;
     private String userName;
@@ -31,8 +31,8 @@ public class Comment implements Listable<Comment> {
     @DatabaseField
     private String linkName;
 
-    public static Builder<?> builder(String id) {
-        return new Builder2(id);
+    public static Builder<?> builder(String id, String parentID) {
+        return new Builder2(id, parentID);
     }
 
     private Comment() {
@@ -103,6 +103,7 @@ public class Comment implements Listable<Comment> {
 
     protected Comment(Builder<?> b) {
         this.id = b.id;
+        this.parentID = b.parentID;
         this.message = b.message;
         this.userID = b.userID;
         this.userName = b.userName;
@@ -115,6 +116,7 @@ public class Comment implements Listable<Comment> {
 
     public static abstract class Builder<T extends Builder<T>> {
         private final String id;
+        private final String parentID;
         private String message;
         private String userName;
 
@@ -127,8 +129,9 @@ public class Comment implements Listable<Comment> {
 
         protected abstract T self();
 
-        public Builder(String id) {
+        public Builder(String id, String parentID) {
             this.id = id;
+            this.parentID = parentID;
         }
 
         public Comment build() {
@@ -173,8 +176,8 @@ public class Comment implements Listable<Comment> {
 
     private static final class Builder2 extends Builder<Builder2> {
 
-        public Builder2(String id) {
-            super(id);
+        public Builder2(String id, String parentID) {
+            super(id, parentID);
         }
 
         @Override

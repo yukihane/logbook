@@ -45,7 +45,7 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
 
     @Override
     protected CommentsPage createPage(JSONObject obj) throws JSONException, ParseException {
-        return CommentsPage.fromJSONObject(obj);
+        return CommentsPage.fromJSONObject(obj, threadID);
     }
 
     @Override
