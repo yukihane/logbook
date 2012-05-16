@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.entity.Comment;
+import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,7 +70,7 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
 
     @Override
     protected List<Comment> getPersistedItems() throws SQLException {
-        // TODO DBからエンティティを取得
-        return new ArrayList<Comment>(0);
+        final Dao<Comment, String> dao = getHelper().getCommentDao();
+        return dao.queryForAll();
     }
 }
