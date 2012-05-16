@@ -1,8 +1,8 @@
 package yukihane.logbook.entity;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
+
+import com.j256.ormlite.field.DatabaseField;
 
 /**
  * ページに表示するひとつひとつの項目.
@@ -11,22 +11,36 @@ import java.util.Date;
  */
 public class StatusMessage implements Listable<StatusMessage> {
 
+    @DatabaseField(id = true)
     private String id;
+    @DatabaseField
     private String type;
+    @DatabaseField
     private String message;
+    @DatabaseField
     private String userName;
+    @DatabaseField(index = true)
     private Date updatedTime;
+    @DatabaseField
     private int commentsCount;
 
+    @DatabaseField
     private String userID;
-    private final Date createdTime;
+    @DatabaseField
+    private Date createdTime;
 
-    private URL picture;
-    private URL link;
+    @DatabaseField
+    private String picture;
+    @DatabaseField
+    private String link;
+    @DatabaseField
     private String linkName;
 
     public static Builder<?> builder(String id, String type) {
         return new Builder2(id, type);
+    }
+
+    private StatusMessage() {
     }
 
     public String getID() {
@@ -41,11 +55,11 @@ public class StatusMessage implements Listable<StatusMessage> {
         return message;
     }
 
-    public URL getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public URL getLink() {
+    public String getLink() {
         return link;
     }
 
@@ -74,6 +88,27 @@ public class StatusMessage implements Listable<StatusMessage> {
         return me.getTime() == you.getTime() ? 0 : me.getTime() > you.getTime() ? 1 : -1;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof StatusMessage)) {
+            return false;
+        }
+        if (id == null) {
+            return false;
+        }
+
+        final StatusMessage other = (StatusMessage) o;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        if (id == null) {
+            return 0;
+        }
+        return id.hashCode();
+    }
+
     protected StatusMessage(Builder<?> b) {
         this.id = b.id;
         this.type = b.type;
@@ -100,8 +135,8 @@ public class StatusMessage implements Listable<StatusMessage> {
         private String userID;
         private Date createdTime;
 
-        private URL picture;
-        private URL link;
+        private String picture;
+        private String link;
         private String linkName;
 
         protected abstract T self();
@@ -146,20 +181,12 @@ public class StatusMessage implements Listable<StatusMessage> {
         }
 
         public T picture(String picture) {
-            try {
-                this.picture = (picture != null && picture.length() > 0) ? new URL(picture) : null;
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException("illegal picture url: " + picture + ",id:" + id + ",type:" + type, e);
-            }
+            this.picture = (picture != null && picture.length() > 0) ? picture : null;
             return self();
         }
 
         public T link(String link) {
-            try {
-                this.link = (link != null && link.length() > 0) ? new URL(link) : null;
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException("illegal link url: " + picture + ",id:" + id + ",type:" + type, e);
-            }
+            this.link = (link != null && link.length() > 0) ? link : null;
             return self();
         }
 

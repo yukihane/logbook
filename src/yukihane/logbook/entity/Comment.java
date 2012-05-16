@@ -1,8 +1,8 @@
 package yukihane.logbook.entity;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
+
+import com.j256.ormlite.field.DatabaseField;
 
 /**
  * コメントエンティティ.
@@ -11,39 +11,46 @@ import java.util.Date;
  */
 public class Comment implements Listable<Comment> {
 
+    @DatabaseField(id = true)
     private String id;
-    private String type;
+    @DatabaseField
+    private String parentID;
+    @DatabaseField
     private String message;
     private String userName;
 
+    @DatabaseField
     private String userID;
-    private final Date createdTime;
+    @DatabaseField
+    private Date createdTime;
 
-    private URL picture;
-    private URL link;
+    @DatabaseField
+    private String picture;
+    @DatabaseField
+    private String link;
+    @DatabaseField
     private String linkName;
 
-    public static Builder<?> builder(String id, String type) {
-        return new Builder2(id, type);
+    public static Builder<?> builder(String id, String parentID) {
+        return new Builder2(id, parentID);
+    }
+
+    private Comment() {
     }
 
     public String getID() {
         return id;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public String getMessage() {
         return message;
     }
 
-    public URL getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public URL getLink() {
+    public String getLink() {
         return link;
     }
 
@@ -52,7 +59,7 @@ public class Comment implements Listable<Comment> {
     }
 
     public String getHeader() {
-        return "" + userName + "  " + createdTime + " " + type;
+        return "" + userName + "  " + createdTime;
     }
 
     public String getBody() {
@@ -61,8 +68,8 @@ public class Comment implements Listable<Comment> {
 
     @Override
     public String toString() {
-        return "id:" + id + ", type:" + type + ", \nmessage:" + message + ", \nuser name: " + userName
-                + ", create time: " + createdTime;
+        return "id:" + id + ", type:comment, \nmessage:" + message + ", \nuser name: " + userName + ", create time: "
+                + createdTime;
     }
 
     @Override
@@ -72,9 +79,31 @@ public class Comment implements Listable<Comment> {
         return me.getTime() == you.getTime() ? 0 : me.getTime() > you.getTime() ? 1 : -1;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Comment)) {
+            return false;
+        }
+
+        if (id == null) {
+            return false;
+        }
+
+        final Comment other = (Comment) o;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        if (id == null) {
+            return 0;
+        }
+        return id.hashCode();
+    }
+
     protected Comment(Builder<?> b) {
         this.id = b.id;
-        this.type = b.type;
+        this.parentID = b.parentID;
         this.message = b.message;
         this.userID = b.userID;
         this.userName = b.userName;
@@ -87,22 +116,22 @@ public class Comment implements Listable<Comment> {
 
     public static abstract class Builder<T extends Builder<T>> {
         private final String id;
-        private final String type;
+        private final String parentID;
         private String message;
         private String userName;
 
         private String userID;
         private Date createdTime;
 
-        private URL picture;
-        private URL link;
+        private String picture;
+        private String link;
         private String linkName;
 
         protected abstract T self();
 
-        public Builder(String id, String type) {
+        public Builder(String id, String parentID) {
             this.id = id;
-            this.type = type;
+            this.parentID = parentID;
         }
 
         public Comment build() {
@@ -130,20 +159,12 @@ public class Comment implements Listable<Comment> {
         }
 
         public T picture(String picture) {
-            try {
-                this.picture = (picture != null && picture.length() > 0) ? new URL(picture) : null;
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException("illegal picture url: " + picture + ",id:" + id + ",type:" + type, e);
-            }
+            this.picture = (picture != null && picture.length() > 0) ? picture : null;
             return self();
         }
 
         public T link(String link) {
-            try {
-                this.link = (link != null && link.length() > 0) ? new URL(link) : null;
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException("illegal link url: " + picture + ",id:" + id + ",type:" + type, e);
-            }
+            this.link = (link != null && link.length() > 0) ? link : null;
             return self();
         }
 
@@ -155,8 +176,8 @@ public class Comment implements Listable<Comment> {
 
     private static final class Builder2 extends Builder<Builder2> {
 
-        public Builder2(String id, String type) {
-            super(id, type);
+        public Builder2(String id, String parentID) {
+            super(id, parentID);
         }
 
         @Override

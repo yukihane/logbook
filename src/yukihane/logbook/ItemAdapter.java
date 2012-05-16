@@ -2,10 +2,9 @@ package yukihane.logbook;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
+import java.util.TreeSet;
 
 import yukihane.logbook.entity.Listable;
 import yukihane.logbook.structure.Page;
@@ -21,7 +20,13 @@ import android.widget.TextView;
 public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
     private final Context context;
     private final ReachLastItemListener listner;
-    private final List<E> items = new ArrayList<E>();
+    private final Collection<E> items = new TreeSet<E>(new Comparator<E>() {
+        @Override
+        public int compare(E lhs, E rhs) {
+            return -1 * lhs.compareTo(rhs);
+        }
+    });
+    private Object[] itemArrayCache;
     private Bundle nextParam;
     private boolean fired = false;
 
@@ -30,20 +35,22 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         this.listner = listener;
     }
 
-    public void addPage(P feed2) {
+    public final void addPage(P feed2) {
         Log.i(TAG,
                 "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:"
                         + feed2.getNextParam());
         fired = false;
         nextParam = feed2.getNextParam();
-        items.addAll(feed2.getItems());
-        Collections.sort(items, new Comparator<E>() {
-            @Override
-            public int compare(E lhs, E rhs) {
-                return -1 * lhs.compareTo(rhs);
-            }
-        });
-        notifyDataSetChanged();
+
+        addItems(feed2.getItems());
+    }
+
+    public final void addItems(Collection<E> it) {
+        items.removeAll(it);
+        final boolean modified = items.addAll(it);
+        if (modified) {
+            notifyDataSetChanged();
+        }
     }
 
     public void clear() {
@@ -60,7 +67,10 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
 
     @Override
     public Object getItem(int position) {
-        return items.get(position);
+        if (itemArrayCache == null) {
+            itemArrayCache = items.toArray();
+        }
+        return itemArrayCache[position];
     }
 
     @Override
@@ -86,12 +96,18 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         }
 
         if (!fired && position >= getCount() - 1) {
-            Log.v(TAG, "fire next page request");
+            Log.i(TAG, "fire next page request");
             listner.fire(nextParam);
             fired = true;
         }
 
         return v;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        itemArrayCache = null;
+        super.notifyDataSetChanged();
     }
 
     public interface ReachLastItemListener {

@@ -2,7 +2,9 @@ package yukihane.logbook;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.facebook.android.SessionEvents;
 import com.facebook.android.SessionEvents.AuthListener;
 import com.facebook.android.SessionEvents.LogoutListener;
+import com.j256.ormlite.dao.Dao;
 
 public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPage> {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
@@ -52,9 +55,8 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
 
     @Override
     protected void onLoginValidated() {
-        getItemAdapter().clear();
         final Bundle b = new Bundle();
-        b.putString("limit", "100");
+        b.putString("limit", "25");
         requestPage(b);
     }
 
@@ -83,6 +85,17 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
     @Override
     protected ItemAdapter<StatusMessage, FeedPage> getItemAdapter() {
         return adapter;
+    }
+
+    @Override
+    protected Dao<StatusMessage, String> getDao() throws SQLException {
+        return getHelper().getStatusMessageDao();
+    }
+
+    @Override
+    protected List<StatusMessage> getPersistedItems() throws SQLException {
+        final Dao<StatusMessage, String> dao = getHelper().getStatusMessageDao();
+        return dao.queryForAll();
     }
 
     private class FbAPIsAuthListener implements AuthListener {

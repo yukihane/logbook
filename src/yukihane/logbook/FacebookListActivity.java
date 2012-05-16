@@ -2,12 +2,16 @@ package yukihane.logbook;
 
 import static yukihane.logbook.LogbookApplication.TAG;
 
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.ItemAdapter.ReachLastItemListener;
+import yukihane.logbook.db.DatabaseHelper;
 import yukihane.logbook.entity.Listable;
 import yukihane.logbook.structure.Page;
 import android.app.Activity;
@@ -24,6 +28,9 @@ import android.widget.TextView;
 
 import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 
 public abstract class FacebookListActivity<E extends Listable<E>, P extends Page<E>> extends Activity {
     private static final int RESULT_CODE_AUTHORIZE_ACTIVITY = 0;
@@ -34,6 +41,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
     private static final int MENU_POST = 2;
 
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
+    private DatabaseHelper databaseHelper = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -45,7 +53,17 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         final TextView footer = new TextView(list.getContext());
         footer.setText("here is footer");
         list.addFooterView(footer);
-        list.setAdapter(getItemAdapter());
+
+        final ItemAdapter<E, P> adapter = getItemAdapter();
+        try {
+            final List<E> items = getPersistedItems();
+            Log.i(TAG, "DB load : " + items.size());
+            adapter.addItems(items);
+        } catch (SQLException e) {
+            Log.e(TAG, "cannot load items", e);
+        }
+
+        list.setAdapter(adapter);
 
         list.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -78,6 +96,10 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
 
     protected abstract String getPostGraphPath();
 
+    protected abstract Dao<E, String> getDao() throws SQLException;
+
+    protected abstract List<E> getPersistedItems() throws SQLException;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -91,6 +113,26 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         Log.v(TAG, "onActivityResult: " + resultCode + ", " + resultCode);
 
         LogbookApplication.mFacebook.authorizeCallback(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        /*
+         * You'll need this in your class to release the helper when done.
+         */
+        if (databaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            databaseHelper = null;
+        }
+    }
+
+    protected final DatabaseHelper getHelper() {
+        if (databaseHelper == null) {
+            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        }
+        return databaseHelper;
     }
 
     private final class MeRequestListener extends RequestListenerAdapter {
@@ -109,9 +151,29 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
 
                             final P page = createPage(res);
                             getItemAdapter().addPage(page);
+
+                            final Dao<E, String> dao = getDao();
+                            final Integer created = dao.callBatchTasks(new Callable<Integer>() {
+                                @Override
+                                public Integer call() throws Exception {
+                                    int created = 0;
+                                    for (E item : page.getItems()) {
+                                        final CreateOrUpdateStatus status = dao.createOrUpdate(item);
+                                        if (status.isCreated()) {
+                                            created++;
+                                        }
+                                    }
+                                    return Integer.valueOf(created);
+                                }
+                            });
+                            Log.i(TAG, "item created: " + created);
                         } catch (JSONException e) {
                             Log.e(TAG, "", e);
                         } catch (ParseException e) {
+                            Log.e(TAG, "", e);
+                        } catch (SQLException e) {
+                            Log.e(TAG, "", e);
+                        } catch (Exception e) {
                             Log.e(TAG, "", e);
                         }
                     }
