@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,8 +15,17 @@ import org.json.JSONObject;
 import yukihane.logbook.entity.Comment;
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.ListView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -31,6 +42,19 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
         adapter.clear();
         threadID = getIntent().getStringExtra("id");
         Log.i(TAG, "threadID: " + threadID);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        Log.v(TAG, "onCreateContextMenu " + getClass().getSimpleName());
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        final AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
+        final ListView lv = (ListView) v;
+        final Comment e = (Comment) lv.getItemAtPosition(acmi.position);
+
+        menu.setHeaderTitle("Action");
+        addTextLinkToContextMenu(menu, e.getMessage(), 0);
     }
 
     @Override
