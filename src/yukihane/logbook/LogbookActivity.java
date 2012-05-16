@@ -1,12 +1,13 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.Constants.CONTEXT_MENU_GROUP_STATUS_MESSAGE;
+import static yukihane.logbook.Constants.STATUS_MESSAGE_MENU_ITEM_COMMENT;
+import static yukihane.logbook.Constants.STATUS_MESSAGE_MENU_ITEM_LINK;
 import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +20,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -74,45 +74,38 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
 
         menu.setHeaderTitle("Action");
 
-        final MenuItem itemComment = menu.add(Menu.NONE, 0, 0, "COMMENT");
+        final MenuItem itemComment = menu.add(CONTEXT_MENU_GROUP_STATUS_MESSAGE, STATUS_MESSAGE_MENU_ITEM_COMMENT, 0,
+                "COMMENT");
         final Intent intentComment = new Intent();
         intentComment.putExtra("id", sm.getID());
         itemComment.setIntent(intentComment);
 
         int num = 1;
         if (sm.getLink() != null) {
-            final MenuItem itemLink = menu.add(Menu.NONE, 1, 1, "LINK");
+            final MenuItem itemLink = menu.add(CONTEXT_MENU_GROUP_STATUS_MESSAGE, STATUS_MESSAGE_MENU_ITEM_LINK, 1,
+                    "LINK");
             final Intent intentLink = new Intent(Intent.ACTION_VIEW, Uri.parse(sm.getLink()));
             itemLink.setIntent(intentLink);
             num++;
         }
 
-        final Pattern urlPattern = Pattern.compile("https?://[^\\s]+");
-        final Matcher urlMatcher = urlPattern.matcher(sm.getMessage());
-        while (urlMatcher.find()) {
-            final String url = urlMatcher.group();
-            Log.i(TAG, "add link to context menu: " + url);
-            final MenuItem item = menu.add(1, num, num, url);
-            item.setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-            num++;
-        }
+        addTextLinkToContextMenu(menu, sm.getMessage(), num);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == 0) {
-            final Intent intent = item.getIntent();
-            final String id = intent.getExtras().getString("id");
-            startCommentActivity(id);
-            return true;
-        } else if (item.getItemId() == 1) {
-            startActivity(item.getIntent());
-            return true;
-        } else if (item.getGroupId() == 1) {
-            startActivity(item.getIntent());
-            return true;
+        if (item.getGroupId() == CONTEXT_MENU_GROUP_STATUS_MESSAGE) {
+            if (item.getItemId() == STATUS_MESSAGE_MENU_ITEM_COMMENT) {
+                final Intent intent = item.getIntent();
+                final String id = intent.getExtras().getString("id");
+                startCommentActivity(id);
+                return true;
+            } else if (item.getItemId() == STATUS_MESSAGE_MENU_ITEM_LINK) {
+                startActivity(item.getIntent());
+                return true;
+            }
         }
-        return false;
+        return super.onContextItemSelected(item);
     }
 
     @Override

@@ -1,11 +1,14 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.Constants.CONTEXT_MENU_GROUP_COMMON_LINK;
 import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +19,10 @@ import yukihane.logbook.entity.Listable;
 import yukihane.logbook.structure.Page;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -237,4 +242,28 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         }
         return false;
     }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getGroupId() == CONTEXT_MENU_GROUP_COMMON_LINK) {
+            startActivity(item.getIntent());
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    protected static final int addTextLinkToContextMenu(final ContextMenu menu, final String text, final int order) {
+        int num = 0;
+        final Pattern urlPattern = Pattern.compile("https?://[^\\s]+");
+        final Matcher urlMatcher = urlPattern.matcher(text);
+        while (urlMatcher.find()) {
+            final String url = urlMatcher.group();
+            Log.i(TAG, "add link to context menu: " + url);
+            final MenuItem item = menu.add(CONTEXT_MENU_GROUP_COMMON_LINK, num, order + num, url);
+            item.setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            num++;
+        }
+        return num;
+    }
+
 }
