@@ -4,28 +4,20 @@ import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.entity.Comment;
-import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ListView;
+import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ListView;
 
 import com.j256.ormlite.dao.Dao;
 
