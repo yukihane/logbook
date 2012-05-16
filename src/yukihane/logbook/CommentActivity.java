@@ -28,7 +28,7 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        adapter.clear();
         threadID = getIntent().getStringExtra("id");
         Log.i(TAG, "threadID: " + threadID);
     }
