@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
+public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
     private final Context context;
     private final ReachLastItemListener listner;
     private final Collection<E> items;
@@ -106,17 +106,11 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         super.notifyDataSetChanged();
     }
 
-    protected final Context getContext(){
+    protected final Context getContext() {
         return context;
     }
-    protected Comparator<E> getComparator() {
-        return new Comparator<E>() {
-            @Override
-            public int compare(E lhs, E rhs) {
-                return lhs.compareTo(rhs);
-            }
-        };
-    }
+
+    protected abstract Comparator<E> getComparator();
 
     public interface ReachLastItemListener {
 

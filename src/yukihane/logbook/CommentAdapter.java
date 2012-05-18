@@ -1,5 +1,7 @@
 package yukihane.logbook;
 
+import java.util.Comparator;
+
 import yukihane.logbook.entity.Comment;
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
@@ -61,4 +63,15 @@ public class CommentAdapter extends ItemAdapter<Comment, CommentsPage> {
 
         return v;
     }
+
+    @Override
+    protected Comparator<Comment> getComparator() {
+        return new Comparator<Comment>() {
+            @Override
+            public int compare(Comment lhs, Comment rhs) {
+                return lhs.compareTo(rhs);
+            }
+        };
+    }
+
 }
