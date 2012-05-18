@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.entity.Comment;
+import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,7 +62,17 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
 
     @Override
     protected CommentsPage createPage(JSONObject obj) throws JSONException, ParseException {
-        return CommentsPage.fromJSONObject(obj, threadID);
+        try {
+            final Dao<StatusMessage, String> dao = getHelper().getStatusMessageDao();
+            final StatusMessage parent = dao.queryForId(getParentID());
+            return CommentsPage.fromJSONObject(obj, threadID, parent);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getParentID() {
+        return threadID.split("_")[1];
     }
 
     @Override
