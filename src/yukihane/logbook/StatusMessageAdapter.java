@@ -1,5 +1,7 @@
 package yukihane.logbook;
 
+import java.util.Comparator;
+
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.FeedPage;
 import android.content.Context;
@@ -69,6 +71,16 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
         }
 
         return v;
+    }
+
+    @Override
+    protected Comparator<StatusMessage> getComparator() {
+        return new Comparator<StatusMessage>() {
+            @Override
+            public int compare(StatusMessage lhs, StatusMessage rhs) {
+                return -1 * lhs.compareTo(rhs);
+            }
+        };
     }
 
     private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
