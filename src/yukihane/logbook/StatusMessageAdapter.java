@@ -27,50 +27,54 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
         final StatusMessage item = (StatusMessage) getItem(position);
         if (item != null) {
-            final String picture = item.getPicture();
-            final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
-
-            iv.setImageBitmap(null);
-            if (picture != null) {
-                new DownloadImageTask(iv).execute(picture.toString());
-            }
-
-            final String linkName = item.getLinkName();
-            final TextView linkTV = (TextView) v.findViewById(R.id.rowlinkname);
-            if (linkName != null) {
-                linkTV.setText(linkName);
-            } else {
-                linkTV.setText("");
-            }
-
-            final String link = item.getLink();
-            if (link != null) {
-                final OnClickListener listener = new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        final Uri uri = Uri.parse(link.toString());
-                        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        v.getContext().startActivity(intent);
-                    }
-                };
-
-                if (picture != null) {
-                    iv.setOnClickListener(listener);
-                }
-
-                if (linkName == null) {
-                    linkTV.setTag("link");
-                }
-                linkTV.setOnClickListener(listener);
-            } else {
-                iv.setOnClickListener(null);
-                linkTV.setOnClickListener(null);
-            }
+            inflateStatusMessage(v, item);
 
         }
 
         return v;
+    }
+
+    static void inflateStatusMessage(final View v, final StatusMessage item) {
+        final String picture = item.getPicture();
+        final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
+
+        iv.setImageBitmap(null);
+        if (picture != null) {
+            new DownloadImageTask(iv).execute(picture.toString());
+        }
+
+        final String linkName = item.getLinkName();
+        final TextView linkTV = (TextView) v.findViewById(R.id.rowlinkname);
+        if (linkName != null) {
+            linkTV.setText(linkName);
+        } else {
+            linkTV.setText("");
+        }
+
+        final String link = item.getLink();
+        if (link != null) {
+            final OnClickListener listener = new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    final Uri uri = Uri.parse(link.toString());
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    v.getContext().startActivity(intent);
+                }
+            };
+
+            if (picture != null) {
+                iv.setOnClickListener(listener);
+            }
+
+            if (linkName == null) {
+                linkTV.setTag("link");
+            }
+            linkTV.setOnClickListener(listener);
+        } else {
+            iv.setOnClickListener(null);
+            linkTV.setOnClickListener(null);
+        }
     }
 
     @Override
