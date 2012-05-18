@@ -52,7 +52,7 @@ public class CommentAdapter extends ItemAdapter<Comment, CommentsPage> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (position != 0) {
-            return super.getView(position - 1, convertView, parent);
+            return super.getView(position, convertView, parent);
         }
 
         View v = convertView;
