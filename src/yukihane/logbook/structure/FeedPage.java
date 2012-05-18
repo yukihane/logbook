@@ -35,6 +35,7 @@ public class FeedPage implements Page<StatusMessage> {
             final String id = m.getString("id");
             final String type = m.getString("type");
             final String message = m.optString("message");
+            final String story = m.optString("story");
             final String createdTimeStr = m.getString("created_time");
             final Date createdTime = sdf.parse(createdTimeStr);
             final String updatedTimeStr = m.getString("updated_time");
@@ -51,9 +52,9 @@ public class FeedPage implements Page<StatusMessage> {
             final String link = m.optString("link");
             final String linkName = m.optString("name");
 
-            final StatusMessage item = StatusMessage.builder(id, type).message(message).userID(userID)
-                    .userName(userName).createdTime(createdTime).updatedTime(updatedTime).commentCount(commentCount)
-                    .picture(picture).link(link).linkName(linkName).build();
+            final StatusMessage item = StatusMessage.builder(id, type).message(message.length() > 0 ? message : story)
+                    .userID(userID).userName(userName).createdTime(createdTime).updatedTime(updatedTime)
+                    .commentCount(commentCount).picture(picture).link(link).linkName(linkName).build();
             it.add(item);
         }
 
