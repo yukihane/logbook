@@ -31,7 +31,7 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         this.items = new TreeSet<E>(getComparator());
     }
 
-    public final void addPage(P feed2) {
+    public void addPage(P feed2) {
         Log.i(TAG,
                 "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:"
                         + feed2.getNextParam());
@@ -106,6 +106,9 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         super.notifyDataSetChanged();
     }
 
+    protected final Context getContext(){
+        return context;
+    }
     protected Comparator<E> getComparator() {
         return new Comparator<E>() {
             @Override

@@ -83,11 +83,11 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
         };
     }
 
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
         private final ImageView iv;
 
-        private DownloadImageTask(ImageView iv) {
+        DownloadImageTask(ImageView iv) {
             super();
             this.iv = iv;
         }

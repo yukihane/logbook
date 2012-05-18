@@ -24,8 +24,7 @@ import com.j256.ormlite.dao.Dao;
 
 public class CommentActivity extends FacebookListActivity<Comment, CommentsPage> {
 
-    private final ItemAdapter<Comment, CommentsPage> adapter = new ItemAdapter<Comment, CommentsPage>(this,
-            new RequestNextPage());
+    private final ItemAdapter<Comment, CommentsPage> adapter = new CommentAdapter(this, new RequestNextPage());
     private String threadID;
 
     /** Called when the activity is first created. */
@@ -64,15 +63,11 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     protected CommentsPage createPage(JSONObject obj) throws JSONException, ParseException {
         try {
             final Dao<StatusMessage, String> dao = getHelper().getStatusMessageDao();
-            final StatusMessage parent = dao.queryForId(getParentID());
+            final StatusMessage parent = dao.queryForId(threadID);
             return CommentsPage.fromJSONObject(obj, threadID, parent);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String getParentID() {
-        return threadID.split("_")[1];
     }
 
     @Override
