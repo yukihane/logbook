@@ -1,6 +1,8 @@
 package yukihane.logbook;
 
 import static yukihane.logbook.Constants.CONTEXT_MENU_GROUP_COMMON_LINK;
+import static yukihane.logbook.Constants.MENU_GROUP_LOGIN_LOGOUT;
+import static yukihane.logbook.Constants.MENU_GROUP_POST;
 import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
@@ -41,10 +43,6 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
     private static final int RESULT_CODE_AUTHORIZE_ACTIVITY = 0;
     private static final int RESULT_CODE_POST_ACTIVITY = 1;
 
-    private static final int MENU_GROUP_LOGIN_LOGOUT = 1;
-
-    private static final int MENU_POST = 2;
-
     private final MeRequestListener pageLiquestListener = new MeRequestListener();
     private DatabaseHelper databaseHelper = null;
 
@@ -74,8 +72,8 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ListView lv = (ListView) parent;
-                final E we = (E) lv.getItemAtPosition(position);
-                onListItemClicked(we);
+                final Object we = lv.getItemAtPosition(position);
+                onListItemClicked(we, position);
             }
         });
 
@@ -92,7 +90,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
 
     protected abstract ItemAdapter<E, P> getItemAdapter();
 
-    protected abstract void onListItemClicked(E item);
+    protected abstract void onListItemClicked(Object item, int position);
 
     protected abstract void onLoginValidated();
 
@@ -219,11 +217,11 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         menu.clear();
 
         if (LogbookApplication.mFacebook.isSessionValid()) {
-            menu.add(MENU_GROUP_LOGIN_LOGOUT, 1, 1, "logout");
+            menu.add(MENU_GROUP_LOGIN_LOGOUT, Menu.NONE, Menu.NONE, "logout");
         } else {
-            menu.add(MENU_GROUP_LOGIN_LOGOUT, 2, 1, "login");
+            menu.add(MENU_GROUP_LOGIN_LOGOUT, Menu.NONE, Menu.NONE, "login");
         }
-        menu.add(Menu.NONE, MENU_POST, 2, "post");
+        menu.add(MENU_GROUP_POST, Menu.NONE, Menu.NONE, "post");
 
         return true;
     }
@@ -234,7 +232,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
         if (item.getGroupId() == MENU_GROUP_LOGIN_LOGOUT) {
             LogbookApplication.changeLoginStatus(FacebookListActivity.this, RESULT_CODE_AUTHORIZE_ACTIVITY);
             return true;
-        } else if (item.getItemId() == MENU_POST) {
+        } else if (item.getGroupId() == MENU_GROUP_POST) {
             final Intent intent = new Intent(getBaseContext(), PostActivity.class);
             intent.putExtra("graphPath", getPostGraphPath());
             startActivity(intent);

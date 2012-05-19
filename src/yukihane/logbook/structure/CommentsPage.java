@@ -11,19 +11,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.entity.Comment;
+import yukihane.logbook.entity.StatusMessage;
 import android.os.Bundle;
 
 public class CommentsPage implements Page<Comment> {
 
+    private final StatusMessage parent;
     private final List<Comment> items;
     private Bundle nextParam;
 
-    protected CommentsPage(List<Comment> items, Bundle nextParam) {
+    protected CommentsPage(StatusMessage parent, List<Comment> items, Bundle nextParam) {
+        this.parent = parent;
         this.items = items;
         this.nextParam = nextParam;
     }
 
-    public static CommentsPage fromJSONObject(JSONObject obj, String parentID) throws JSONException, ParseException {
+    public static CommentsPage fromJSONObject(JSONObject obj, String parentID, StatusMessage parent)
+            throws JSONException, ParseException {
         final JSONObject commentsObj = obj.getJSONObject("comments");
         final JSONArray data = commentsObj.optJSONArray("data");
         final List<Comment> it;
@@ -50,7 +54,11 @@ public class CommentsPage implements Page<Comment> {
             it = new ArrayList<Comment>(0);
         }
 
-        return new CommentsPage(it, null);
+        return new CommentsPage(parent, it, null);
+    }
+
+    public StatusMessage getParent() {
+        return parent;
     }
 
     @Override

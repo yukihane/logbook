@@ -1,9 +1,17 @@
 package yukihane.logbook;
 
+import android.view.Menu;
+
 public interface Constants {
     int CONTEXT_MENU_GROUP_COMMON_LINK = 1;
     int CONTEXT_MENU_GROUP_STATUS_MESSAGE = 2;
-    
+
     int STATUS_MESSAGE_MENU_ITEM_COMMENT = 1;
     int STATUS_MESSAGE_MENU_ITEM_LINK = 2;
+
+    int MENU_GROUP_LOGIN_LOGOUT = Menu.CATEGORY_SYSTEM;
+    int MENU_GROUP_POST = MENU_GROUP_LOGIN_LOGOUT + 1;
+    
+    int MENU_GROUP_COMMENT_ORIGINAL = Menu.CATEGORY_SECONDARY;
+
 }

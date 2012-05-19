@@ -17,15 +17,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
+public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
     private final Context context;
     private final ReachLastItemListener listner;
-    private final Collection<E> items = new TreeSet<E>(new Comparator<E>() {
-        @Override
-        public int compare(E lhs, E rhs) {
-            return -1 * lhs.compareTo(rhs);
-        }
-    });
+    private final Collection<E> items;
     private Object[] itemArrayCache;
     private Bundle nextParam;
     private boolean fired = false;
@@ -33,9 +28,10 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
     public ItemAdapter(Context context, ReachLastItemListener listener) {
         this.context = context;
         this.listner = listener;
+        this.items = new TreeSet<E>(getComparator());
     }
 
-    public final void addPage(P feed2) {
+    public void addPage(P feed2) {
         Log.i(TAG,
                 "item added. cur:" + items.size() + ", new:" + feed2.getItems().size() + ", next:"
                         + feed2.getNextParam());
@@ -109,6 +105,12 @@ public class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseA
         itemArrayCache = null;
         super.notifyDataSetChanged();
     }
+
+    protected final Context getContext() {
+        return context;
+    }
+
+    protected abstract Comparator<E> getComparator();
 
     public interface ReachLastItemListener {
 

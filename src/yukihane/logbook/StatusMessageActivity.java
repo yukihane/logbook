@@ -31,7 +31,7 @@ import com.facebook.android.SessionEvents.AuthListener;
 import com.facebook.android.SessionEvents.LogoutListener;
 import com.j256.ormlite.dao.Dao;
 
-public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPage> {
+public class StatusMessageActivity extends FacebookListActivity<StatusMessage, FeedPage> {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
     private final StatusMessageAdapter adapter = new StatusMessageAdapter(this, new RequestNextPage());
 
@@ -89,7 +89,7 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
             num++;
         }
 
-        addTextLinkToContextMenu(menu, sm.getMessage(), num);
+        addTextLinkToContextMenu(menu, sm.getBody(), num);
     }
 
     @Override
@@ -116,12 +116,12 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
     }
 
     @Override
-    protected void onListItemClicked(StatusMessage item) {
-        startCommentActivity(item.getID());
+    protected void onListItemClicked(Object item, int position) {
+        startCommentActivity(((StatusMessage) item).getID());
     }
 
     private void startCommentActivity(String id) {
-        final Intent intent = new Intent(LogbookActivity.this, CommentActivity.class);
+        final Intent intent = new Intent(StatusMessageActivity.this, CommentActivity.class);
         intent.putExtra("id", id);
         startActivityForResult(intent, COMMENT_ACTIVITY_RESULT_CODE);
     }

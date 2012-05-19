@@ -1,5 +1,6 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.Constants.MENU_GROUP_COMMENT_ORIGINAL;
 import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
@@ -10,11 +11,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.entity.Comment;
+import yukihane.logbook.entity.Listable;
+import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
@@ -23,8 +30,7 @@ import com.j256.ormlite.dao.Dao;
 
 public class CommentActivity extends FacebookListActivity<Comment, CommentsPage> {
 
-    private final ItemAdapter<Comment, CommentsPage> adapter = new ItemAdapter<Comment, CommentsPage>(this,
-            new RequestNextPage());
+    private final ItemAdapter<Comment, CommentsPage> adapter = new CommentAdapter(this, new RequestNextPage());
     private String threadID;
 
     /** Called when the activity is first created. */
@@ -37,20 +43,39 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.add(MENU_GROUP_COMMENT_ORIGINAL, Menu.NONE, Menu.NONE, "original");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getGroupId() == MENU_GROUP_COMMENT_ORIGINAL) {
+            final String[] s = threadID.split("_");
+            final Uri uri = Uri.parse("https://wwww.facebook.com/" + s[0] + "/posts/" + s[1]);
+            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         Log.v(TAG, "onCreateContextMenu " + getClass().getSimpleName());
         super.onCreateContextMenu(menu, v, menuInfo);
 
         final AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
         final ListView lv = (ListView) v;
-        final Comment e = (Comment) lv.getItemAtPosition(acmi.position);
+        final Listable<?> e = (Listable<?>) lv.getItemAtPosition(acmi.position);
 
         menu.setHeaderTitle("Action");
-        addTextLinkToContextMenu(menu, e.getMessage(), 0);
+        addTextLinkToContextMenu(menu, e.getBody(), 0);
     }
 
     @Override
-    protected void onListItemClicked(Comment item) {
+    protected void onListItemClicked(Object item, int position) {
         return;
     }
 
@@ -61,7 +86,13 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
 
     @Override
     protected CommentsPage createPage(JSONObject obj) throws JSONException, ParseException {
-        return CommentsPage.fromJSONObject(obj, threadID);
+        try {
+            final Dao<StatusMessage, String> dao = getHelper().getStatusMessageDao();
+            final StatusMessage parent = dao.queryForId(threadID);
+            return CommentsPage.fromJSONObject(obj, threadID, parent);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
