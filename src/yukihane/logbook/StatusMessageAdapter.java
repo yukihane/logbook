@@ -1,5 +1,7 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.LogbookApplication.TAG;
+
 import java.util.Comparator;
 
 import yukihane.logbook.entity.StatusMessage;
@@ -9,11 +11,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
@@ -97,7 +99,27 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            return LogbookApplication.getBitmap(params[0]);
+            final Bitmap bm = LogbookApplication.getBitmap(params[0]);
+            if (bm == null) {
+                Log.i(TAG, "Image not found: " + params[0]);
+                return null;
+            }
+
+            final int sizeMax = 128;
+            int width = bm.getWidth();
+            int height = bm.getHeight();
+            if (width >= height) {
+                if (width > sizeMax) {
+                    height = height * sizeMax / width;
+                    width = sizeMax;
+                }
+            } else {
+                if (height > sizeMax) {
+                    width = width * sizeMax / height;
+                    height = sizeMax;
+                }
+            }
+            return Bitmap.createScaledBitmap(bm, width, height, true);
         }
 
         @Override
