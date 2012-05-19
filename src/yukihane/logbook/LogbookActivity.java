@@ -116,8 +116,8 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
     }
 
     @Override
-    protected void onListItemClicked(StatusMessage item) {
-        startCommentActivity(item.getID());
+    protected void onListItemClicked(Object item, int position) {
+        startCommentActivity(((StatusMessage)item).getID());
     }
 
     private void startCommentActivity(String id) {

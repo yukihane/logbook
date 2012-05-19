@@ -50,7 +50,7 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     }
 
     @Override
-    protected void onListItemClicked(Comment item) {
+    protected void onListItemClicked(Object item, int position) {
         return;
     }
 

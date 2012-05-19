@@ -74,8 +74,8 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ListView lv = (ListView) parent;
-                final E we = (E) lv.getItemAtPosition(position);
-                onListItemClicked(we);
+                final Object we = lv.getItemAtPosition(position);
+                onListItemClicked(we, position);
             }
         });
 
@@ -92,7 +92,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
 
     protected abstract ItemAdapter<E, P> getItemAdapter();
 
-    protected abstract void onListItemClicked(E item);
+    protected abstract void onListItemClicked(Object item, int position);
 
     protected abstract void onLoginValidated();
 
