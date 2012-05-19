@@ -36,19 +36,18 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
     static void inflateStatusMessage(final View v, final StatusMessage item) {
         final String picture = item.getPicture();
-        final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
+        final ViewHolder holder = (ViewHolder) v.getTag();
 
-        iv.setImageBitmap(null);
+        holder.picture.setImageBitmap(null);
         if (picture != null) {
-            new DownloadImageTask(iv).execute(picture.toString());
+            new DownloadImageTask(holder.picture).execute(picture.toString());
         }
 
         final String linkName = item.getLinkName();
-        final TextView linkTV = (TextView) v.findViewById(R.id.rowlinkname);
         if (linkName != null) {
-            linkTV.setText(linkName);
+            holder.link.setText(linkName);
         } else {
-            linkTV.setText("");
+            holder.link.setText("");
         }
 
         final String link = item.getLink();
@@ -64,16 +63,16 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
             };
 
             if (picture != null) {
-                iv.setOnClickListener(listener);
+                holder.picture.setOnClickListener(listener);
             }
 
             if (linkName == null) {
-                linkTV.setTag("link");
+                holder.link.setText("link");
             }
-            linkTV.setOnClickListener(listener);
+            holder.link.setOnClickListener(listener);
         } else {
-            iv.setOnClickListener(null);
-            linkTV.setOnClickListener(null);
+            holder.picture.setOnClickListener(null);
+            holder.link.setOnClickListener(null);
         }
     }
 

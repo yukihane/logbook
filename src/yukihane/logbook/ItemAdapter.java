@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
@@ -77,6 +78,8 @@ public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> exte
     protected static final class ViewHolder {
         TextView header;
         TextView body;
+        ImageView picture;
+        TextView link;
     }
 
     @Override
@@ -91,6 +94,8 @@ public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> exte
             holder = new ViewHolder();
             holder.header = (TextView) v.findViewById(R.id.rowheader);
             holder.body = (TextView) v.findViewById(R.id.rowitem);
+            holder.picture = (ImageView) v.findViewById(R.id.rowpicture);
+            holder.link = (TextView) v.findViewById(R.id.rowlinkname);
 
             v.setTag(holder);
         } else {
