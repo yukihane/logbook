@@ -1,5 +1,6 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.Constants.MENU_GROUP_COMMENT_ORIGINAL;
 import static yukihane.logbook.LogbookApplication.TAG;
 
 import java.sql.SQLException;
@@ -44,13 +45,13 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.add(100, 3, 2, "original");
+        menu.add(MENU_GROUP_COMMENT_ORIGINAL, Menu.NONE, Menu.NONE, "original");
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getGroupId() == 100) {
+        if (item.getGroupId() == MENU_GROUP_COMMENT_ORIGINAL) {
             final String[] s = threadID.split("_");
             final Uri uri = Uri.parse("https://wwww.facebook.com/" + s[0] + "/posts/" + s[1]);
             final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
