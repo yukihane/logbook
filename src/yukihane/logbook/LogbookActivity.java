@@ -89,7 +89,7 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
             num++;
         }
 
-        addTextLinkToContextMenu(menu, sm.getMessage(), num);
+        addTextLinkToContextMenu(menu, sm.getBody(), num);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class LogbookActivity extends FacebookListActivity<StatusMessage, FeedPag
 
     @Override
     protected void onListItemClicked(Object item, int position) {
-        startCommentActivity(((StatusMessage)item).getID());
+        startCommentActivity(((StatusMessage) item).getID());
     }
 
     private void startCommentActivity(String id) {

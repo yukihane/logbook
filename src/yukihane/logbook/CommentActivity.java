@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import yukihane.logbook.entity.Comment;
+import yukihane.logbook.entity.Listable;
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
 import android.os.Bundle;
@@ -43,10 +44,10 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
 
         final AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
         final ListView lv = (ListView) v;
-        final Comment e = (Comment) lv.getItemAtPosition(acmi.position);
+        final Listable<?> e = (Listable<?>) lv.getItemAtPosition(acmi.position);
 
         menu.setHeaderTitle("Action");
-        addTextLinkToContextMenu(menu, e.getMessage(), 0);
+        addTextLinkToContextMenu(menu, e.getBody(), 0);
     }
 
     @Override
