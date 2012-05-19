@@ -13,10 +13,14 @@ import yukihane.logbook.entity.Comment;
 import yukihane.logbook.entity.Listable;
 import yukihane.logbook.entity.StatusMessage;
 import yukihane.logbook.structure.CommentsPage;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
@@ -35,6 +39,25 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
         adapter.clear();
         threadID = getIntent().getStringExtra("id");
         Log.i(TAG, "threadID: " + threadID);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.add(100, 3, 2, "original");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getGroupId() == 100) {
+            final String[] s = threadID.split("_");
+            final Uri uri = Uri.parse("https://wwww.facebook.com/" + s[0] + "/posts/" + s[1]);
+            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
