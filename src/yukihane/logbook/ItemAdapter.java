@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
@@ -74,21 +75,38 @@ public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> exte
         return position;
     }
 
+    protected static final class ViewHolder {
+        TextView header;
+        TextView body;
+        ImageView picture;
+        TextView link;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
-        if (v == null) {
+        final View v;
+        final ViewHolder holder;
+        if (convertView == null) {
             final LayoutInflater inflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.item_display, null);
+
+            holder = new ViewHolder();
+            holder.header = (TextView) v.findViewById(R.id.rowheader);
+            holder.body = (TextView) v.findViewById(R.id.rowitem);
+            holder.picture = (ImageView) v.findViewById(R.id.rowpicture);
+            holder.link = (TextView) v.findViewById(R.id.rowlinkname);
+
+            v.setTag(holder);
+        } else {
+            v = convertView;
+            holder = (ViewHolder) v.getTag();
         }
 
         final E item = (E) getItem(position);
         if (item != null) {
-            final TextView header = (TextView) v.findViewById(R.id.rowheader);
-            header.setText(item.getHeader());
-            final TextView textView = (TextView) v.findViewById(R.id.rowitem);
-            textView.setText(item.getBody());
+            holder.header.setText(item.getHeader());
+            holder.body.setText(item.getBody());
         }
 
         if (!fired && position >= getCount() - 1) {

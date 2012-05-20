@@ -1,5 +1,7 @@
 package yukihane.logbook;
 
+import static yukihane.logbook.LogbookApplication.TAG;
+
 import java.util.Comparator;
 
 import yukihane.logbook.entity.StatusMessage;
@@ -9,11 +11,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
@@ -36,19 +38,18 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
     static void inflateStatusMessage(final View v, final StatusMessage item) {
         final String picture = item.getPicture();
-        final ImageView iv = (ImageView) v.findViewById(R.id.rowpicture);
+        final ViewHolder holder = (ViewHolder) v.getTag();
 
-        iv.setImageBitmap(null);
+        holder.picture.setImageBitmap(null);
         if (picture != null) {
-            new DownloadImageTask(iv).execute(picture.toString());
+            new DownloadImageTask(holder.picture).execute(picture.toString());
         }
 
         final String linkName = item.getLinkName();
-        final TextView linkTV = (TextView) v.findViewById(R.id.rowlinkname);
         if (linkName != null) {
-            linkTV.setText(linkName);
+            holder.link.setText(linkName);
         } else {
-            linkTV.setText("");
+            holder.link.setText("");
         }
 
         final String link = item.getLink();
@@ -64,16 +65,16 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
             };
 
             if (picture != null) {
-                iv.setOnClickListener(listener);
+                holder.picture.setOnClickListener(listener);
             }
 
             if (linkName == null) {
-                linkTV.setTag("link");
+                holder.link.setText("link");
             }
-            linkTV.setOnClickListener(listener);
+            holder.link.setOnClickListener(listener);
         } else {
-            iv.setOnClickListener(null);
-            linkTV.setOnClickListener(null);
+            holder.picture.setOnClickListener(null);
+            holder.link.setOnClickListener(null);
         }
     }
 
@@ -98,7 +99,27 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            return LogbookApplication.getBitmap(params[0]);
+            final Bitmap bm = LogbookApplication.getBitmap(params[0]);
+            if (bm == null) {
+                Log.i(TAG, "Image not found: " + params[0]);
+                return null;
+            }
+
+            final int sizeMax = 128;
+            int width = bm.getWidth();
+            int height = bm.getHeight();
+            if (width >= height) {
+                if (width > sizeMax) {
+                    height = height * sizeMax / width;
+                    width = sizeMax;
+                }
+            } else {
+                if (height > sizeMax) {
+                    width = width * sizeMax / height;
+                    height = sizeMax;
+                }
+            }
+            return Bitmap.createScaledBitmap(bm, width, height, true);
         }
 
         @Override
