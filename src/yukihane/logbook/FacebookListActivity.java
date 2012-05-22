@@ -48,7 +48,7 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
@@ -81,11 +81,59 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         if (LogbookApplication.mFacebook.isSessionValid()) {
             onLoginValidated();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        Log.v(TAG, "onResume " + getClass().getSimpleName());
+        super.onResume();
+        LogbookApplication.mFacebook.extendAccessTokenIfNeeded(this, null);
+    }
+
+    @Override
+    protected void onPause() {
+        Log.v(TAG, "onPause " + getClass().getSimpleName());
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.v(TAG, "onStop " + getClass().getSimpleName());
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.v(TAG, "onDestroy " + getClass().getSimpleName());
+        super.onDestroy();
+
+        /*
+         * You'll need this in your class to release the helper when done.
+         */
+        if (databaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            databaseHelper = null;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.v(TAG, "onActivityResult: " + resultCode + ", " + resultCode);
+
+        LogbookApplication.mFacebook.authorizeCallback(requestCode, resultCode, data);
+    }
+
+    protected final DatabaseHelper getHelper() {
+        if (databaseHelper == null) {
+            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        }
+        return databaseHelper;
     }
 
     protected abstract ItemAdapter<E, P> getItemAdapter();
@@ -103,41 +151,6 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
     protected abstract Dao<E, String> getDao() throws SQLException;
 
     protected abstract List<E> getPersistedItems() throws SQLException;
-
-    @Override
-    public void onResume() {
-        Log.v(TAG, "onResume " + getClass().getSimpleName());
-        super.onResume();
-        LogbookApplication.mFacebook.extendAccessTokenIfNeeded(this, null);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.v(TAG, "onActivityResult: " + resultCode + ", " + resultCode);
-
-        LogbookApplication.mFacebook.authorizeCallback(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        /*
-         * You'll need this in your class to release the helper when done.
-         */
-        if (databaseHelper != null) {
-            OpenHelperManager.releaseHelper();
-            databaseHelper = null;
-        }
-    }
-
-    protected final DatabaseHelper getHelper() {
-        if (databaseHelper == null) {
-            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-        }
-        return databaseHelper;
-    }
 
     private final class MeRequestListener extends RequestListenerAdapter {
 
