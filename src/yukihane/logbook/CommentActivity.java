@@ -36,10 +36,11 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         adapter = new CommentAdapter(this, new RequestNextPage());
         threadID = getIntent().getStringExtra("id");
         Log.i(TAG, "threadID: " + threadID);
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
