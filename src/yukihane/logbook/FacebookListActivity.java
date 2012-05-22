@@ -106,8 +106,8 @@ public abstract class FacebookListActivity<E extends Listable<E>, P extends Page
 
     @Override
     public void onResume() {
+        Log.v(TAG, "onResume " + getClass().getSimpleName());
         super.onResume();
-        Log.v(TAG, "onResume");
         LogbookApplication.mFacebook.extendAccessTokenIfNeeded(this, null);
     }
 

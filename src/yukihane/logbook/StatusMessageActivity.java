@@ -51,13 +51,6 @@ public class StatusMessageActivity extends FacebookListActivity<StatusMessage, F
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume");
-        LogbookApplication.mFacebook.extendAccessTokenIfNeeded(this, null);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult: " + resultCode + ", " + resultCode);
