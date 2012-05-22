@@ -17,10 +17,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.fedorvlasov.lazylist.ImageLoader;
+
 public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
+    private final ImageLoader imageLoader;
 
     public StatusMessageAdapter(Context context, ReachLastItemListener listener) {
         super(context, listener);
+        imageLoader = new ImageLoader(context.getApplicationContext(), "logbook_cache", com.fedorvlasov.lazylist.R.drawable.stub);
     }
 
     @Override
@@ -29,20 +33,24 @@ public class StatusMessageAdapter extends ItemAdapter<StatusMessage, FeedPage> {
 
         final StatusMessage item = (StatusMessage) getItem(position);
         if (item != null) {
-            inflateStatusMessage(v, item);
+            inflateStatusMessage(v, item, imageLoader);
 
         }
 
         return v;
     }
 
-    static void inflateStatusMessage(final View v, final StatusMessage item) {
+    static void inflateStatusMessage(final View v, final StatusMessage item, final ImageLoader imLoader) {
         final String picture = item.getPicture();
         final ViewHolder holder = (ViewHolder) v.getTag();
 
         holder.picture.setImageBitmap(null);
         if (picture != null) {
-            new DownloadImageTask(holder.picture).execute(picture.toString());
+            if (imLoader == null) {
+                new DownloadImageTask(holder.picture).execute(picture.toString());
+            } else {
+                imLoader.displayImage(picture, holder.picture);
+            }
         }
 
         final String linkName = item.getLinkName();

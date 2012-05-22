@@ -33,11 +33,13 @@ import com.j256.ormlite.dao.Dao;
 
 public class StatusMessageActivity extends FacebookListActivity<StatusMessage, FeedPage> {
     private static final int COMMENT_ACTIVITY_RESULT_CODE = 1;
-    private final StatusMessageAdapter adapter = new StatusMessageAdapter(this, new RequestNextPage());
+    private StatusMessageAdapter adapter;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        adapter = new StatusMessageAdapter(this, new RequestNextPage());
+
         super.onCreate(savedInstanceState);
 
         SessionEvents.addAuthListener(new FbAPIsAuthListener());
