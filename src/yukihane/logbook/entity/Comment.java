@@ -10,6 +10,7 @@ import com.j256.ormlite.field.DatabaseField;
  *
  */
 public class Comment implements Listable<Comment> {
+    public static final String PARENT_ID_FIELD_NAME ="parentID";
 
     @DatabaseField(id = true)
     private String id;

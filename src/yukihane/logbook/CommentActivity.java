@@ -30,16 +30,17 @@ import com.j256.ormlite.dao.Dao;
 
 public class CommentActivity extends FacebookListActivity<Comment, CommentsPage> {
 
-    private final ItemAdapter<Comment, CommentsPage> adapter = new CommentAdapter(this, new RequestNextPage());
+    private ItemAdapter<Comment, CommentsPage> adapter;
     private String threadID;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        adapter.clear();
+        adapter = new CommentAdapter(this, new RequestNextPage());
         threadID = getIntent().getStringExtra("id");
         Log.i(TAG, "threadID: " + threadID);
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -118,6 +119,6 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     @Override
     protected List<Comment> getPersistedItems() throws SQLException {
         final Dao<Comment, String> dao = getHelper().getCommentDao();
-        return dao.queryForAll();
+        return dao.queryForEq(Comment.PARENT_ID_FIELD_NAME, threadID);
     }
 }
