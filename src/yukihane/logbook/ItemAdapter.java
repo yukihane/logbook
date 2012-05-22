@@ -34,6 +34,7 @@ public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> exte
         this.listner = listener;
         imageLoader = new ImageLoader(context.getApplicationContext(), "logbook_cache", com.fedorvlasov.lazylist.R.drawable.stub);
         this.items = new TreeSet<E>(getComparator());
+        itemArrayCache = null;
     }
 
     public void addPage(P feed2) {
@@ -50,6 +51,7 @@ public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> exte
         items.removeAll(it);
         final boolean modified = items.addAll(it);
         if (modified) {
+            itemArrayCache = null;
             notifyDataSetChanged();
         }
     }
