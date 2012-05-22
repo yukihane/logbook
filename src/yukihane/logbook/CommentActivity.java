@@ -118,6 +118,6 @@ public class CommentActivity extends FacebookListActivity<Comment, CommentsPage>
     @Override
     protected List<Comment> getPersistedItems() throws SQLException {
         final Dao<Comment, String> dao = getHelper().getCommentDao();
-        return dao.queryForAll();
+        return dao.queryForEq(Comment.PARENT_ID_FIELD_NAME, threadID);
     }
 }
