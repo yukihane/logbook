@@ -30,14 +30,14 @@ import com.j256.ormlite.dao.Dao;
 
 public class CommentActivity extends FacebookListActivity<Comment, CommentsPage> {
 
-    private final ItemAdapter<Comment, CommentsPage> adapter = new CommentAdapter(this, new RequestNextPage());
+    private ItemAdapter<Comment, CommentsPage> adapter;
     private String threadID;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter.clear();
+        adapter = new CommentAdapter(this, new RequestNextPage());
         threadID = getIntent().getStringExtra("id");
         Log.i(TAG, "threadID: " + threadID);
     }

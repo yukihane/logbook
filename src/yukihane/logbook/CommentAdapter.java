@@ -55,7 +55,7 @@ public class CommentAdapter extends ItemAdapter<Comment, CommentsPage> {
 
         final StatusMessage item = (StatusMessage) getItem(position);
         if (item != null) {
-            StatusMessageAdapter.inflateStatusMessage(v, item, null);
+            StatusMessageAdapter.inflateStatusMessage(v, item, getImageLoader());
         } else {
             final TextView textView = (TextView) v.findViewById(R.id.rowitem);
             textView.setText("Parent text is not exists(Menu -> Original to brows).");

@@ -18,9 +18,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fedorvlasov.lazylist.ImageLoader;
+
 public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> extends BaseAdapter {
     private final Context context;
     private final ReachLastItemListener listner;
+    private final ImageLoader imageLoader;
     private final Collection<E> items;
     private Object[] itemArrayCache;
     private Bundle nextParam;
@@ -29,6 +32,7 @@ public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> exte
     public ItemAdapter(Context context, ReachLastItemListener listener) {
         this.context = context;
         this.listner = listener;
+        imageLoader = new ImageLoader(context.getApplicationContext(), "logbook_cache", com.fedorvlasov.lazylist.R.drawable.stub);
         this.items = new TreeSet<E>(getComparator());
     }
 
@@ -126,6 +130,10 @@ public abstract class ItemAdapter<E extends Listable<E>, P extends Page<E>> exte
 
     protected final Context getContext() {
         return context;
+    }
+    
+    protected final ImageLoader getImageLoader(){
+        return imageLoader;
     }
 
     protected abstract Comparator<E> getComparator();
